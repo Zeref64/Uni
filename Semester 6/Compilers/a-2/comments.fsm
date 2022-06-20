@@ -1,0 +1,6 @@
+START=READY
+READY:   ;  -> COM_1
+         *  -> BAD
+COM_1:   \n -> GOOD
+         *  -> COM_1
+GOOD(OK):

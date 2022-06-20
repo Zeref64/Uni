@@ -1,0 +1,123 @@
+ΑΜ: 19390104
+Ονοματεπώνυμο: Κούμανης Βασίλειος
+Τμήμα Εργαστηρίου: Δευτέρα 01
+Ασκήσεις 1 & 2:
+
+
+create database new_personnel;
+use new_personnel;
+
+create table DEPT (DEPTNO int(2), DEPTNAME varchar (15), LOC varchar (20), primary key(DEPTNO));			-- DEPT table
+
+create table EMP (EMPNO int (2), ENAME varchar (20), JOB varchar (20), HIREDATE date, MGR int(2), SAL float (6,2), 	-- EMP table
+	-> COMM float (6,2), DEPTNO int (2), primary key (EMPNO), foreign key(DEPTNO) references DEPT(DEPTNO));
+
+create table PROJ (PROJECT_CODE int (3), DESCRIPTION varchar (30), primary key(PROJECT_CODE));				-- PROJ table
+
+create table ASSIGN (EMPNO int(2), PROJECT_CODE int(3), A_TIME int(3),
+	-> foreign key (EMPNO) references EMP(EMPNO),foreign key (PROJECT_CODE) references PROJ(PROJECT_CODE));		-- ASSIGN table
+
+
+insert into DEPT values (10,'ACCOUNTING','ATHENS');
+insert into DEPT values (20,'SALES','LONDON');
+insert into DEPT VALUES (30,'RESEARCH','ATHENS');					-- DEPT table fill
+insert into DEPT VALUES (40,'PAYROLL','LONDON');
+
+insert into EMP VALUES (10,'CODD','ANALYST','1989/1/1',15,3000,NULL,10);
+insert into EMP VALUES (15,'ELMASRI','ANALYST','1995/5/2',15,1200,150,10);
+insert into EMP VALUES (20,'NAVATHE','SELESMAN','1977/7/7',20,2000,NULL,20);		-- EMP table fill
+insert into EMP VALUES (30,'DATE','PROGRAMMER','2004/5/4',15,1800,200,10);
+
+insert into PROJ VALUES (100,'PAYROLL');
+insert into PROJ VALUES (200,'PERSONNEL');						-- PROJ table fill
+insert into INTO PROJ VALUES (300,'SALES');
+
+insert into ASSIGN VALUES (10,100,40);
+insert into ASSIGN VALUES (10,200,60);
+insert into ASSIGN VALUES (15,100,100);							-- ASSIGN table fill
+insert into ASSIGN VALUES (20,200,100);	
+insert into ASSIGN VALUES (30,100,100);
+	
+									--DESCRIBE--
+
+describe DEPT;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| DEPTNO   | int         | NO   | PRI | NULL    |       |
+| DEPTNAME | varchar(15) | YES  |     | NULL    |       |
+| LOC      | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+
+describe EMP;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| EMPNO    | int         | NO   | PRI | NULL    |       |
+| ENAME    | varchar(20) | YES  |     | NULL    |       |
+| JOB      | varchar(20) | YES  |     | NULL    |       |
+| HIREDATE | date        | YES  |     | NULL    |       |
+| MGR      | int         | YES  |     | NULL    |       |
+| SAL      | float(6,2)  | YES  |     | NULL    |       |
+| COMM     | float(6,2)  | YES  |     | NULL    |       |
+| DEPTNO   | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+
+describe PROJ;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| PROJECT_CODE | int         | NO   | PRI | NULL    |       |
+| DESCRIPTION  | varchar(30) | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+
+describe ASSIGN;
++--------------+------+------+-----+---------+-------+
+| Field        | Type | Null | Key | Default | Extra |
++--------------+------+------+-----+---------+-------+
+| EMPNO        | int  | YES  | MUL | NULL    |       |
+| PROJECT_CODE | int  | YES  | MUL | NULL    |       |
+| A_TIME       | int  | YES  |     | NULL    |       |
++--------------+------+------+-----+---------+-------+
+
+									--SELECT--
+
+select *from DEPT;
++--------+------------+--------+
+| DEPTNO | DEPTNAME   | LOC    |
++--------+------------+--------+
+|     10 | ACCOUNTING | ATHENS |
+|     20 | SALES      | LONDON |
+|     30 | RESEARCH   | ATHENS |
+|     40 | PAYROLL    | LONDON |
++--------+------------+--------+
+
+select *from EMP;
++-------+---------+------------+------------+------+---------+--------+--------+
+| EMPNO | ENAME   | JOB        | HIREDATE   | MGR  | SAL     | COMM   | DEPTNO |
++-------+---------+------------+------------+------+---------+--------+--------+
+|    10 | CODD    | ANALYST    | 1989-01-01 |   15 | 3000.00 |   NULL |     10 |
+|    15 | ELMASRI | ANALYST    | 1995-05-02 |   15 | 1200.00 | 150.00 |     10 |
+|    20 | NAVATHE | SELESMAN   | 1977-07-07 |   20 | 2000.00 |   NULL |     20 |
+|    30 | DATE    | PROGRAMMER | 2004-05-04 |   15 | 1800.00 | 200.00 |     10 |
++-------+---------+------------+------------+------+---------+--------+--------+
+
+select *from PROJ;
+ +--------------+-------------+
+| PROJECT_CODE | DESCRIPTION |
++--------------+-------------+
+|          100 | PAYROLL     |
+|          200 | PERSONNEL   |
+|          300 | SALES       |
++--------------+-------------+
+
+select *from ASSIGN;
++-------+--------------+--------+
+| EMPNO | PROJECT_CODE | A_TIME |
++-------+--------------+--------+
+|    10 |          100 |     40 |
+|    10 |          200 |     60 |
+|    15 |          100 |    100 |
+|    20 |          200 |    100 |
+|    30 |          100 |    100 |
++-------+--------------+--------+

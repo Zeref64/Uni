@@ -1,0 +1,1118 @@
+State 6 conflicts: 2 reduce/reduce
+State 13 conflicts: 2 reduce/reduce
+State 14 conflicts: 1 shift/reduce
+State 41 conflicts: 4 shift/reduce
+State 47 conflicts: 2 shift/reduce
+State 51 conflicts: 2 shift/reduce
+State 53 conflicts: 2 shift/reduce
+State 55 conflicts: 1 shift/reduce
+State 68 conflicts: 2 shift/reduce
+State 76 conflicts: 2 shift/reduce
+State 86 conflicts: 3 shift/reduce
+State 87 conflicts: 2 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: program PAREN_L define
+    2        | program PAREN_L fact PAREN_R
+    3        | program prepare_calc
+    4        | program PAREN_L OP_EQUAL compare PAREN_R
+    5        | program TOKEN_ERROR
+    6        | %empty
+
+    7 define: DEF_RULE statement PRINT_TEXT print PAREN_R PAREN_R
+    8       | DEF_FACT statement PAREN_R
+    9       | test PAREN_R
+   10       | bind PAREN_R
+
+   11 print: PAREN_L text PAREN_R
+   12      | print print
+   13      | text
+
+   14 text: STRING
+   15     | VARIABLE
+   16     | text text
+
+   17 statement: NAME statement
+   18          | PAREN_L fact PAREN_R
+   19          | PAREN_L test PAREN_R ARROW PAREN_L
+   20          | statement statement
+
+   21 fact: NAME
+   22     | VARIABLE
+   23     | value
+   24     | fact fact
+
+   25 value: INTCONST
+   26      | FLOAT_POINT
+
+   27 test: TEST PAREN_L OP_EQUAL compare PAREN_R
+
+   28 compare: argument prepare_calc
+   29        | prepare_calc argument
+   30        | VARIABLE INTCONST
+   31        | INTCONST VARIABLE
+   32        | %empty
+
+   33 argument: VARIABLE
+   34         | INTCONST
+   35         | %empty
+
+   36 prepare_calc: PAREN_L operator calc calc PAREN_R
+   37             | PAREN_L operator calc operator calc PAREN_R
+   38             | PAREN_L calc operator calc PAREN_R
+
+   39 operator: OP_PLUS
+   40         | OP_MINUS
+   41         | OP_MULT
+   42         | OP_DIVIDE
+
+   43 calc: INTCONST
+   44     | VARIABLE
+   45     | calc calc
+
+   46 bind: BIND VARIABLE content
+   47     | BIND VARIABLE INTCONST
+   48     | BIND VARIABLE PAREN_L NAME PAREN_R
+
+   49 content: PAREN_L READ_TEXT PAREN_R
+   50        | prepare_calc
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    PAREN_L (258) 1 2 4 11 18 19 27 36 37 38 48 49
+    PAREN_R (259) 2 4 7 8 9 10 11 18 19 27 36 37 38 48 49
+    ARROW (260) 19
+    TOKEN_ERROR (261) 5
+    INTCONST (262) 25 30 31 34 43 47
+    FLOAT_POINT (263) 26
+    DEF_FACT (264) 8
+    DEF_RULE (265) 7
+    TEST (266) 27
+    BIND (267) 46 47 48
+    READ_TEXT (268) 49
+    PRINT_TEXT (269) 7
+    NAME (270) 17 21 48
+    VARIABLE (271) 15 22 30 31 33 44 46 47 48
+    STRING (272) 14
+    OP_EQUAL (273) 4 27
+    OP_PLUS (274) 39
+    OP_MINUS (275) 40
+    OP_MULT (276) 41
+    OP_DIVIDE (277) 42
+
+
+Nonterminals, with rules where they appear
+
+    $accept (23)
+        on left: 0
+    program (24)
+        on left: 1 2 3 4 5 6
+        on right: 0 1 2 3 4 5
+    define (25)
+        on left: 7 8 9 10
+        on right: 1
+    print (26)
+        on left: 11 12 13
+        on right: 7 12
+    text (27)
+        on left: 14 15 16
+        on right: 11 13 16
+    statement (28)
+        on left: 17 18 19 20
+        on right: 7 8 17 20
+    fact (29)
+        on left: 21 22 23 24
+        on right: 2 18 24
+    value (30)
+        on left: 25 26
+        on right: 23
+    test (31)
+        on left: 27
+        on right: 9 19
+    compare (32)
+        on left: 28 29 30 31 32
+        on right: 4 27
+    argument (33)
+        on left: 33 34 35
+        on right: 28 29
+    prepare_calc (34)
+        on left: 36 37 38
+        on right: 3 28 29 50
+    operator (35)
+        on left: 39 40 41 42
+        on right: 36 37 38
+    calc (36)
+        on left: 43 44 45
+        on right: 36 37 38 45
+    bind (37)
+        on left: 46 47 48
+        on right: 10
+    content (38)
+        on left: 49 50
+        on right: 46
+
+
+State 0
+
+    0 $accept: . program $end
+
+    $default  reduce using rule 6 (program)
+
+    program  go to state 1
+
+
+State 1
+
+    0 $accept: program . $end
+    1 program: program . PAREN_L define
+    2        | program . PAREN_L fact PAREN_R
+    3        | program . prepare_calc
+    4        | program . PAREN_L OP_EQUAL compare PAREN_R
+    5        | program . TOKEN_ERROR
+
+    $end         shift, and go to state 2
+    PAREN_L      shift, and go to state 3
+    TOKEN_ERROR  shift, and go to state 4
+
+    prepare_calc  go to state 5
+
+
+State 2
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 3
+
+    1 program: program PAREN_L . define
+    2        | program PAREN_L . fact PAREN_R
+    4        | program PAREN_L . OP_EQUAL compare PAREN_R
+   36 prepare_calc: PAREN_L . operator calc calc PAREN_R
+   37             | PAREN_L . operator calc operator calc PAREN_R
+   38             | PAREN_L . calc operator calc PAREN_R
+
+    INTCONST     shift, and go to state 6
+    FLOAT_POINT  shift, and go to state 7
+    DEF_FACT     shift, and go to state 8
+    DEF_RULE     shift, and go to state 9
+    TEST         shift, and go to state 10
+    BIND         shift, and go to state 11
+    NAME         shift, and go to state 12
+    VARIABLE     shift, and go to state 13
+    OP_EQUAL     shift, and go to state 14
+    OP_PLUS      shift, and go to state 15
+    OP_MINUS     shift, and go to state 16
+    OP_MULT      shift, and go to state 17
+    OP_DIVIDE    shift, and go to state 18
+
+    define    go to state 19
+    fact      go to state 20
+    value     go to state 21
+    test      go to state 22
+    operator  go to state 23
+    calc      go to state 24
+    bind      go to state 25
+
+
+State 4
+
+    5 program: program TOKEN_ERROR .
+
+    $default  reduce using rule 5 (program)
+
+
+State 5
+
+    3 program: program prepare_calc .
+
+    $default  reduce using rule 3 (program)
+
+
+State 6
+
+   25 value: INTCONST .
+   43 calc: INTCONST .
+
+    INTCONST   reduce using rule 25 (value)
+    INTCONST   [reduce using rule 43 (calc)]
+    VARIABLE   reduce using rule 25 (value)
+    VARIABLE   [reduce using rule 43 (calc)]
+    OP_PLUS    reduce using rule 43 (calc)
+    OP_MINUS   reduce using rule 43 (calc)
+    OP_MULT    reduce using rule 43 (calc)
+    OP_DIVIDE  reduce using rule 43 (calc)
+    $default   reduce using rule 25 (value)
+
+
+State 7
+
+   26 value: FLOAT_POINT .
+
+    $default  reduce using rule 26 (value)
+
+
+State 8
+
+    8 define: DEF_FACT . statement PAREN_R
+
+    PAREN_L  shift, and go to state 26
+    NAME     shift, and go to state 27
+
+    statement  go to state 28
+
+
+State 9
+
+    7 define: DEF_RULE . statement PRINT_TEXT print PAREN_R PAREN_R
+
+    PAREN_L  shift, and go to state 26
+    NAME     shift, and go to state 27
+
+    statement  go to state 29
+
+
+State 10
+
+   27 test: TEST . PAREN_L OP_EQUAL compare PAREN_R
+
+    PAREN_L  shift, and go to state 30
+
+
+State 11
+
+   46 bind: BIND . VARIABLE content
+   47     | BIND . VARIABLE INTCONST
+   48     | BIND . VARIABLE PAREN_L NAME PAREN_R
+
+    VARIABLE  shift, and go to state 31
+
+
+State 12
+
+   21 fact: NAME .
+
+    $default  reduce using rule 21 (fact)
+
+
+State 13
+
+   22 fact: VARIABLE .
+   44 calc: VARIABLE .
+
+    INTCONST   reduce using rule 22 (fact)
+    INTCONST   [reduce using rule 44 (calc)]
+    VARIABLE   reduce using rule 22 (fact)
+    VARIABLE   [reduce using rule 44 (calc)]
+    OP_PLUS    reduce using rule 44 (calc)
+    OP_MINUS   reduce using rule 44 (calc)
+    OP_MULT    reduce using rule 44 (calc)
+    OP_DIVIDE  reduce using rule 44 (calc)
+    $default   reduce using rule 22 (fact)
+
+
+State 14
+
+    4 program: program PAREN_L OP_EQUAL . compare PAREN_R
+
+    PAREN_L   shift, and go to state 32
+    INTCONST  shift, and go to state 33
+    VARIABLE  shift, and go to state 34
+
+    PAREN_L   [reduce using rule 35 (argument)]
+    $default  reduce using rule 32 (compare)
+
+    compare       go to state 35
+    argument      go to state 36
+    prepare_calc  go to state 37
+
+
+State 15
+
+   39 operator: OP_PLUS .
+
+    $default  reduce using rule 39 (operator)
+
+
+State 16
+
+   40 operator: OP_MINUS .
+
+    $default  reduce using rule 40 (operator)
+
+
+State 17
+
+   41 operator: OP_MULT .
+
+    $default  reduce using rule 41 (operator)
+
+
+State 18
+
+   42 operator: OP_DIVIDE .
+
+    $default  reduce using rule 42 (operator)
+
+
+State 19
+
+    1 program: program PAREN_L define .
+
+    $default  reduce using rule 1 (program)
+
+
+State 20
+
+    2 program: program PAREN_L fact . PAREN_R
+   24 fact: fact . fact
+
+    PAREN_R      shift, and go to state 38
+    INTCONST     shift, and go to state 39
+    FLOAT_POINT  shift, and go to state 7
+    NAME         shift, and go to state 12
+    VARIABLE     shift, and go to state 40
+
+    fact   go to state 41
+    value  go to state 21
+
+
+State 21
+
+   23 fact: value .
+
+    $default  reduce using rule 23 (fact)
+
+
+State 22
+
+    9 define: test . PAREN_R
+
+    PAREN_R  shift, and go to state 42
+
+
+State 23
+
+   36 prepare_calc: PAREN_L operator . calc calc PAREN_R
+   37             | PAREN_L operator . calc operator calc PAREN_R
+
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    calc  go to state 45
+
+
+State 24
+
+   38 prepare_calc: PAREN_L calc . operator calc PAREN_R
+   45 calc: calc . calc
+
+    INTCONST   shift, and go to state 43
+    VARIABLE   shift, and go to state 44
+    OP_PLUS    shift, and go to state 15
+    OP_MINUS   shift, and go to state 16
+    OP_MULT    shift, and go to state 17
+    OP_DIVIDE  shift, and go to state 18
+
+    operator  go to state 46
+    calc      go to state 47
+
+
+State 25
+
+   10 define: bind . PAREN_R
+
+    PAREN_R  shift, and go to state 48
+
+
+State 26
+
+   18 statement: PAREN_L . fact PAREN_R
+   19          | PAREN_L . test PAREN_R ARROW PAREN_L
+
+    INTCONST     shift, and go to state 39
+    FLOAT_POINT  shift, and go to state 7
+    TEST         shift, and go to state 10
+    NAME         shift, and go to state 12
+    VARIABLE     shift, and go to state 40
+
+    fact   go to state 49
+    value  go to state 21
+    test   go to state 50
+
+
+State 27
+
+   17 statement: NAME . statement
+
+    PAREN_L  shift, and go to state 26
+    NAME     shift, and go to state 27
+
+    statement  go to state 51
+
+
+State 28
+
+    8 define: DEF_FACT statement . PAREN_R
+   20 statement: statement . statement
+
+    PAREN_L  shift, and go to state 26
+    PAREN_R  shift, and go to state 52
+    NAME     shift, and go to state 27
+
+    statement  go to state 53
+
+
+State 29
+
+    7 define: DEF_RULE statement . PRINT_TEXT print PAREN_R PAREN_R
+   20 statement: statement . statement
+
+    PAREN_L     shift, and go to state 26
+    PRINT_TEXT  shift, and go to state 54
+    NAME        shift, and go to state 27
+
+    statement  go to state 53
+
+
+State 30
+
+   27 test: TEST PAREN_L . OP_EQUAL compare PAREN_R
+
+    OP_EQUAL  shift, and go to state 55
+
+
+State 31
+
+   46 bind: BIND VARIABLE . content
+   47     | BIND VARIABLE . INTCONST
+   48     | BIND VARIABLE . PAREN_L NAME PAREN_R
+
+    PAREN_L   shift, and go to state 56
+    INTCONST  shift, and go to state 57
+
+    prepare_calc  go to state 58
+    content       go to state 59
+
+
+State 32
+
+   36 prepare_calc: PAREN_L . operator calc calc PAREN_R
+   37             | PAREN_L . operator calc operator calc PAREN_R
+   38             | PAREN_L . calc operator calc PAREN_R
+
+    INTCONST   shift, and go to state 43
+    VARIABLE   shift, and go to state 44
+    OP_PLUS    shift, and go to state 15
+    OP_MINUS   shift, and go to state 16
+    OP_MULT    shift, and go to state 17
+    OP_DIVIDE  shift, and go to state 18
+
+    operator  go to state 23
+    calc      go to state 24
+
+
+State 33
+
+   31 compare: INTCONST . VARIABLE
+   34 argument: INTCONST .
+
+    VARIABLE  shift, and go to state 60
+
+    $default  reduce using rule 34 (argument)
+
+
+State 34
+
+   30 compare: VARIABLE . INTCONST
+   33 argument: VARIABLE .
+
+    INTCONST  shift, and go to state 61
+
+    $default  reduce using rule 33 (argument)
+
+
+State 35
+
+    4 program: program PAREN_L OP_EQUAL compare . PAREN_R
+
+    PAREN_R  shift, and go to state 62
+
+
+State 36
+
+   28 compare: argument . prepare_calc
+
+    PAREN_L  shift, and go to state 32
+
+    prepare_calc  go to state 63
+
+
+State 37
+
+   29 compare: prepare_calc . argument
+
+    INTCONST  shift, and go to state 64
+    VARIABLE  shift, and go to state 65
+
+    $default  reduce using rule 35 (argument)
+
+    argument  go to state 66
+
+
+State 38
+
+    2 program: program PAREN_L fact PAREN_R .
+
+    $default  reduce using rule 2 (program)
+
+
+State 39
+
+   25 value: INTCONST .
+
+    $default  reduce using rule 25 (value)
+
+
+State 40
+
+   22 fact: VARIABLE .
+
+    $default  reduce using rule 22 (fact)
+
+
+State 41
+
+   24 fact: fact . fact
+   24     | fact fact .
+
+    INTCONST     shift, and go to state 39
+    FLOAT_POINT  shift, and go to state 7
+    NAME         shift, and go to state 12
+    VARIABLE     shift, and go to state 40
+
+    INTCONST     [reduce using rule 24 (fact)]
+    FLOAT_POINT  [reduce using rule 24 (fact)]
+    NAME         [reduce using rule 24 (fact)]
+    VARIABLE     [reduce using rule 24 (fact)]
+    $default     reduce using rule 24 (fact)
+
+    fact   go to state 41
+    value  go to state 21
+
+
+State 42
+
+    9 define: test PAREN_R .
+
+    $default  reduce using rule 9 (define)
+
+
+State 43
+
+   43 calc: INTCONST .
+
+    $default  reduce using rule 43 (calc)
+
+
+State 44
+
+   44 calc: VARIABLE .
+
+    $default  reduce using rule 44 (calc)
+
+
+State 45
+
+   36 prepare_calc: PAREN_L operator calc . calc PAREN_R
+   37             | PAREN_L operator calc . operator calc PAREN_R
+   45 calc: calc . calc
+
+    INTCONST   shift, and go to state 43
+    VARIABLE   shift, and go to state 44
+    OP_PLUS    shift, and go to state 15
+    OP_MINUS   shift, and go to state 16
+    OP_MULT    shift, and go to state 17
+    OP_DIVIDE  shift, and go to state 18
+
+    operator  go to state 67
+    calc      go to state 68
+
+
+State 46
+
+   38 prepare_calc: PAREN_L calc operator . calc PAREN_R
+
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    calc  go to state 69
+
+
+State 47
+
+   45 calc: calc . calc
+   45     | calc calc .
+
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    INTCONST  [reduce using rule 45 (calc)]
+    VARIABLE  [reduce using rule 45 (calc)]
+    $default  reduce using rule 45 (calc)
+
+    calc  go to state 47
+
+
+State 48
+
+   10 define: bind PAREN_R .
+
+    $default  reduce using rule 10 (define)
+
+
+State 49
+
+   18 statement: PAREN_L fact . PAREN_R
+   24 fact: fact . fact
+
+    PAREN_R      shift, and go to state 70
+    INTCONST     shift, and go to state 39
+    FLOAT_POINT  shift, and go to state 7
+    NAME         shift, and go to state 12
+    VARIABLE     shift, and go to state 40
+
+    fact   go to state 41
+    value  go to state 21
+
+
+State 50
+
+   19 statement: PAREN_L test . PAREN_R ARROW PAREN_L
+
+    PAREN_R  shift, and go to state 71
+
+
+State 51
+
+   17 statement: NAME statement .
+   20          | statement . statement
+
+    PAREN_L  shift, and go to state 26
+    NAME     shift, and go to state 27
+
+    PAREN_L   [reduce using rule 17 (statement)]
+    NAME      [reduce using rule 17 (statement)]
+    $default  reduce using rule 17 (statement)
+
+    statement  go to state 53
+
+
+State 52
+
+    8 define: DEF_FACT statement PAREN_R .
+
+    $default  reduce using rule 8 (define)
+
+
+State 53
+
+   20 statement: statement . statement
+   20          | statement statement .
+
+    PAREN_L  shift, and go to state 26
+    NAME     shift, and go to state 27
+
+    PAREN_L   [reduce using rule 20 (statement)]
+    NAME      [reduce using rule 20 (statement)]
+    $default  reduce using rule 20 (statement)
+
+    statement  go to state 53
+
+
+State 54
+
+    7 define: DEF_RULE statement PRINT_TEXT . print PAREN_R PAREN_R
+
+    PAREN_L   shift, and go to state 72
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    print  go to state 75
+    text   go to state 76
+
+
+State 55
+
+   27 test: TEST PAREN_L OP_EQUAL . compare PAREN_R
+
+    PAREN_L   shift, and go to state 32
+    INTCONST  shift, and go to state 33
+    VARIABLE  shift, and go to state 34
+
+    PAREN_L   [reduce using rule 35 (argument)]
+    $default  reduce using rule 32 (compare)
+
+    compare       go to state 77
+    argument      go to state 36
+    prepare_calc  go to state 37
+
+
+State 56
+
+   36 prepare_calc: PAREN_L . operator calc calc PAREN_R
+   37             | PAREN_L . operator calc operator calc PAREN_R
+   38             | PAREN_L . calc operator calc PAREN_R
+   48 bind: BIND VARIABLE PAREN_L . NAME PAREN_R
+   49 content: PAREN_L . READ_TEXT PAREN_R
+
+    INTCONST   shift, and go to state 43
+    READ_TEXT  shift, and go to state 78
+    NAME       shift, and go to state 79
+    VARIABLE   shift, and go to state 44
+    OP_PLUS    shift, and go to state 15
+    OP_MINUS   shift, and go to state 16
+    OP_MULT    shift, and go to state 17
+    OP_DIVIDE  shift, and go to state 18
+
+    operator  go to state 23
+    calc      go to state 24
+
+
+State 57
+
+   47 bind: BIND VARIABLE INTCONST .
+
+    $default  reduce using rule 47 (bind)
+
+
+State 58
+
+   50 content: prepare_calc .
+
+    $default  reduce using rule 50 (content)
+
+
+State 59
+
+   46 bind: BIND VARIABLE content .
+
+    $default  reduce using rule 46 (bind)
+
+
+State 60
+
+   31 compare: INTCONST VARIABLE .
+
+    $default  reduce using rule 31 (compare)
+
+
+State 61
+
+   30 compare: VARIABLE INTCONST .
+
+    $default  reduce using rule 30 (compare)
+
+
+State 62
+
+    4 program: program PAREN_L OP_EQUAL compare PAREN_R .
+
+    $default  reduce using rule 4 (program)
+
+
+State 63
+
+   28 compare: argument prepare_calc .
+
+    $default  reduce using rule 28 (compare)
+
+
+State 64
+
+   34 argument: INTCONST .
+
+    $default  reduce using rule 34 (argument)
+
+
+State 65
+
+   33 argument: VARIABLE .
+
+    $default  reduce using rule 33 (argument)
+
+
+State 66
+
+   29 compare: prepare_calc argument .
+
+    $default  reduce using rule 29 (compare)
+
+
+State 67
+
+   37 prepare_calc: PAREN_L operator calc operator . calc PAREN_R
+
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    calc  go to state 80
+
+
+State 68
+
+   36 prepare_calc: PAREN_L operator calc calc . PAREN_R
+   45 calc: calc . calc
+   45     | calc calc .
+
+    PAREN_R   shift, and go to state 81
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    INTCONST  [reduce using rule 45 (calc)]
+    VARIABLE  [reduce using rule 45 (calc)]
+    $default  reduce using rule 45 (calc)
+
+    calc  go to state 47
+
+
+State 69
+
+   38 prepare_calc: PAREN_L calc operator calc . PAREN_R
+   45 calc: calc . calc
+
+    PAREN_R   shift, and go to state 82
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    calc  go to state 47
+
+
+State 70
+
+   18 statement: PAREN_L fact PAREN_R .
+
+    $default  reduce using rule 18 (statement)
+
+
+State 71
+
+   19 statement: PAREN_L test PAREN_R . ARROW PAREN_L
+
+    ARROW  shift, and go to state 83
+
+
+State 72
+
+   11 print: PAREN_L . text PAREN_R
+
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    text  go to state 84
+
+
+State 73
+
+   15 text: VARIABLE .
+
+    $default  reduce using rule 15 (text)
+
+
+State 74
+
+   14 text: STRING .
+
+    $default  reduce using rule 14 (text)
+
+
+State 75
+
+    7 define: DEF_RULE statement PRINT_TEXT print . PAREN_R PAREN_R
+   12 print: print . print
+
+    PAREN_L   shift, and go to state 72
+    PAREN_R   shift, and go to state 85
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    print  go to state 86
+    text   go to state 76
+
+
+State 76
+
+   13 print: text .
+   16 text: text . text
+
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    VARIABLE  [reduce using rule 13 (print)]
+    STRING    [reduce using rule 13 (print)]
+    $default  reduce using rule 13 (print)
+
+    text  go to state 87
+
+
+State 77
+
+   27 test: TEST PAREN_L OP_EQUAL compare . PAREN_R
+
+    PAREN_R  shift, and go to state 88
+
+
+State 78
+
+   49 content: PAREN_L READ_TEXT . PAREN_R
+
+    PAREN_R  shift, and go to state 89
+
+
+State 79
+
+   48 bind: BIND VARIABLE PAREN_L NAME . PAREN_R
+
+    PAREN_R  shift, and go to state 90
+
+
+State 80
+
+   37 prepare_calc: PAREN_L operator calc operator calc . PAREN_R
+   45 calc: calc . calc
+
+    PAREN_R   shift, and go to state 91
+    INTCONST  shift, and go to state 43
+    VARIABLE  shift, and go to state 44
+
+    calc  go to state 47
+
+
+State 81
+
+   36 prepare_calc: PAREN_L operator calc calc PAREN_R .
+
+    $default  reduce using rule 36 (prepare_calc)
+
+
+State 82
+
+   38 prepare_calc: PAREN_L calc operator calc PAREN_R .
+
+    $default  reduce using rule 38 (prepare_calc)
+
+
+State 83
+
+   19 statement: PAREN_L test PAREN_R ARROW . PAREN_L
+
+    PAREN_L  shift, and go to state 92
+
+
+State 84
+
+   11 print: PAREN_L text . PAREN_R
+   16 text: text . text
+
+    PAREN_R   shift, and go to state 93
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    text  go to state 87
+
+
+State 85
+
+    7 define: DEF_RULE statement PRINT_TEXT print PAREN_R . PAREN_R
+
+    PAREN_R  shift, and go to state 94
+
+
+State 86
+
+   12 print: print . print
+   12      | print print .
+
+    PAREN_L   shift, and go to state 72
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    PAREN_L   [reduce using rule 12 (print)]
+    VARIABLE  [reduce using rule 12 (print)]
+    STRING    [reduce using rule 12 (print)]
+    $default  reduce using rule 12 (print)
+
+    print  go to state 86
+    text   go to state 76
+
+
+State 87
+
+   16 text: text . text
+   16     | text text .
+
+    VARIABLE  shift, and go to state 73
+    STRING    shift, and go to state 74
+
+    VARIABLE  [reduce using rule 16 (text)]
+    STRING    [reduce using rule 16 (text)]
+    $default  reduce using rule 16 (text)
+
+    text  go to state 87
+
+
+State 88
+
+   27 test: TEST PAREN_L OP_EQUAL compare PAREN_R .
+
+    $default  reduce using rule 27 (test)
+
+
+State 89
+
+   49 content: PAREN_L READ_TEXT PAREN_R .
+
+    $default  reduce using rule 49 (content)
+
+
+State 90
+
+   48 bind: BIND VARIABLE PAREN_L NAME PAREN_R .
+
+    $default  reduce using rule 48 (bind)
+
+
+State 91
+
+   37 prepare_calc: PAREN_L operator calc operator calc PAREN_R .
+
+    $default  reduce using rule 37 (prepare_calc)
+
+
+State 92
+
+   19 statement: PAREN_L test PAREN_R ARROW PAREN_L .
+
+    $default  reduce using rule 19 (statement)
+
+
+State 93
+
+   11 print: PAREN_L text PAREN_R .
+
+    $default  reduce using rule 11 (print)
+
+
+State 94
+
+    7 define: DEF_RULE statement PRINT_TEXT print PAREN_R PAREN_R .
+
+    $default  reduce using rule 7 (define)

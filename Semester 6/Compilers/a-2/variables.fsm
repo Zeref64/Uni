@@ -1,0 +1,9 @@
+START=READY
+READY:   ?           -> VAR_1
+         *           -> BAD
+VAR_1:   a-z A-Z 0-9 -> VAR_2
+         *           -> BAD
+VAR_2:   a-z A-Z 0-9 -> VAR_2
+         \n          -> GOOD
+         *           -> BAD
+GOOD(OK):

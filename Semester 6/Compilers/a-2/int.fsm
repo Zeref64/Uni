@@ -1,0 +1,10 @@
+START=READY
+READY:   \+ \- -> INT_1
+         1-9   -> INT_2
+         *     -> BAD
+INT_1:   1-9   -> INT_2
+         *     -> BAD
+INT_2:   0-9   -> INT_2
+         \n    -> GOOD
+         *     -> BAD
+GOOD(OK):

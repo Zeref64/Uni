@@ -1,0 +1,117 @@
+ΑΜ: 19390104
+ΟΝΟΜΑΤΕΠΩΝΥΜΟ: ΒΑΣΙΛΕΙΟΣ ΚΟΥΜΑΝΗΣ
+
+"ΒΑΣΕΙΣ ΔΕΔΟΜΕΝΩΝ"
+Assignment_03_2021
+Εκφώνηση >>> Ταξινόμηση και υποπροτάσεις GROUP BY και HAVING. Συνδέσεις (JOIN).
+Χ. Σκουρλάς, Z. Γαροφαλάκη, Ε. Κοσμάτος, A. Τσολακίδης
+====================================================================================================================================
+Ερωτήματα - Απαντήσεις >>>
+
+// Ερώτημα 1 //
+mysql> select ENAME,EMP.DEPTNO from EMP inner join DEPT on EMP.DEPTNO = DEPT.DEPTNO where EMP.DEPTNO = 10 order by SAL asc;
++---------+--------+
+| ENAME   | DEPTNO |
++---------+--------+
+| ELMASRI |     10 |
+| DATE    |     10 |
+| CODD    |     10 |
++---------+--------+
+3 rows in set (0.00 sec)
+====================================================================================================================================
+
+// Ερώτημα 2 //
+mysql> select ENAME,JOB,SAL from EMP inner join DEPT on EMP.DEPTNO = DEPT.DEPTNO order by DEPTNAME asc, SAL desc;
+
++---------+------------+---------+
+| ENAME   | JOB        | SAL     |
++---------+------------+---------+
+| CODD    | ANALYST    | 3000.00 |
+| DATE    | PROGRAMMER | 1800.00 |
+| ELMASRI | ANALYST    | 1200.00 |
+| NAVATHE | SALESMAN   | 2000.00 |
++---------+------------+---------+
+4 rows in set (0.00 sec)
+====================================================================================================================================
+
+// Ερώτημα 3 //
+mysql> select DEPTNAME, format(AVG(SAL),2) "Average Salary" from EMP inner join DEPT on EMP.DEPTNO = DEPT.DEPTNO GROUP BY DEPTNAME;
+
++------------+----------------+
+| DEPTNAME   | Average Salary |
++------------+----------------+
+| ACCOUNTING | 2,000.00       |
+| SALES      | 2,000.00       |
++------------+----------------+
+2 rows in set (0.00 sec)
+====================================================================================================================================
+
+// Ερώτημα 4 //
+
+mysql> select DEPTNO, AVG(2021-substring(HIREDATE,1,4))"ΠΡΟΫΠΗΡΕΣΙΑ (Σε Έτη)" from EMP X where X.DEPTNO = DEPTNO
+    -> GROUP BY DEPTNO;
++--------+--------------------------------------+
+| DEPTNO | ΠΡΟΫΠΗΡΕΣΙΑ (Σε Έτη)                 |
++--------+--------------------------------------+
+|     10 |                                   25 |
+|     20 |                                   44 |
++--------+--------------------------------------+
+2 rows in set (0.00 sec)
+====================================================================================================================================
+
+// Ερώτημα 5 //
+
+mysql> select DESCRIPTION "Project Name", ENAME, JOB from PROJ inner join ASSIGN on PROJ.PROJECT_CODE = ASSIGN.PROJECT_CODE
+    -> left join EMP on ASSIGN.EMPNO = EMP.EMPNO order by DESCRIPTION, JOB;
++--------------+---------+------------+
+| Project Name | ENAME   | JOB        |
++--------------+---------+------------+
+| PAYROLL      | CODD    | ANALYST    |
+| PAYROLL      | ELMASRI | ANALYST    |
+| PAYROLL      | DATE    | PROGRAMMER |
+| PERSONNEL    | CODD    | ANALYST    |
+| PERSONNEL    | NAVATHE | SELESMAN   |
++--------------+---------+------------+
+5 rows in set (0.00 sec)
+
+====================================================================================================================================
+
+// Ερώτημα 6 //
+
+mysql> select DEPTNAME "DEPARTMENT",T2.ENAME "MANAGER",T1.ENAME "EMPLOYEE" from EMP T1
+    -> left join EMP T2 on T1.MGR = T2.EMPNO left join DEPT on T1.DEPTNO = DEPT.DEPTNO
+    ->  ORDER BY DEPTNAME,T1.ENAME;
++------------+---------+----------+
+| DEPARTMENT | MANAGER | EMPLOYEE |
++------------+---------+----------+
+| ACCOUNTING | ELMASRI | CODD     |
+| ACCOUNTING | ELMASRI | DATE     |
+| ACCOUNTING | ELMASRI | ELMASRI  |
+| SALES      | NAVATHE | NAVATHE  |
++------------+---------+----------+
+4 rows in set (0.00 sec)
+
+====================================================================================================================================
+
+// Ερώτημα 7 //
+
+mysql> select ENAME,JOB,LOC from EMP inner join dept on EMP.DEPTNO = DEPT.DEPTNO
+    -> WHERE DEPTNAME = "RESEARCH";
+Empty set (0.00 sec)
+
+====================================================================================================================================
+
+// Ερώτημα 8 //
+
+mysql> select ENAME from EMP left join ASSIGN on EMP.EMPNO = ASSIGN.EMPNO
+    -> left join PROJ on ASSIGN.PROJECT_CODE = PROJ.PROJECT_CODE
+    -> WHERE A_TIME > 50 AND DESCRIPTION = "PAYROLL";
++---------+
+| ENAME   |
++---------+
+| ELMASRI |
+| DATE    |
++---------+
+2 rows in set (0.00 sec)
+
+

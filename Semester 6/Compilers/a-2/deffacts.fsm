@@ -1,0 +1,7 @@
+START=READY
+READY:   a-z A-Z           -> DEF_1
+         *                 -> BAD
+DEF_1:   a-z A-Z 0-9 \- \_ -> DEF_1
+         \n                -> GOOD
+         *                 -> BAD
+GOOD(OK):

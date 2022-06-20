@@ -1,0 +1,12 @@
+19390104/Bill Koumanis/23/12/01/200.99/2/Kalamata-Athens/10/75.5/1
+19452304/Chris Vasileiou/11/3/01/100.50/1/Trikala-Kalamata/15/66/3
+5533223/Andrew Lyritzis/21/4/01/50/3/Athens-Cyprus/12/80.3/2
+33313344/Shigeru Miyamoto/11/7/92/64.2/3/Osaka-Greece/0/64/3
+44423233/Satoru Iwata/16/9/01/100.99/2/Osaka-Greece/0/68/3
+55554432/Eiji Aonuma/19/11/01/64.3/2/Osaka-Greece/4/77.3/3
+54321312/Hideo Kojima/18/7/01/120.99/2/Greece-Japan/2/81/2
+99685000/Super Mario/23/5/01/65/2/MushroomKingdom/7/90/0
+54436234/SonicTheHedgehog/9/5/01/500/3/Green Hill-Zone/0/20/1
+23423557/Link/23/12/01/33/5/Hyrule/20/75/1
+19390104/Koumanis Vasileios/12/6/21/120.50/2/Kalamata-Athens/10/75.6/2232/2332/3223/23/323233/232323/232/23/3323
+2132332/Megaman/24/10/01/450.3/2/USA-Greece/10/50/1

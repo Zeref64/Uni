@@ -1,0 +1,83 @@
+START=READY
+READY:   \- \+ -> INT_0
+         1-9   -> INT_1
+         0     -> INT_2
+         A-Z a-z  -> DEF_1
+         ?     -> VAR_1
+         ;     -> COM_1
+         "     -> STR_1
+         \s    -> SEP_1
+         \(    -> SEP_2
+         *     -> BAD
+INT_0:   1-9   -> INT_1
+         0     -> INT_2
+         *     -> BAD
+INT_1:   0-9   -> INT_1
+         \.    -> FLT_P1
+         E e  -> FLT_E1
+         \n    -> GOOD
+         *     -> BAD
+INT_2:   0-9   -> INT_2
+         \.    -> FLT_P1
+         E e  -> FLT_E1
+         *     -> BAD
+FLT_E1:  \-    -> FLT_E2
+         0-9   -> FLT_E3
+         *     -> BAD
+FLT_E2:  1-9   -> FLT_E3
+         *     -> BAD
+FLT_E3:  0-9   -> FLT_E3
+         \.    -> FLT_P1
+         \n    -> GOOD
+         *     -> BAD
+FLT_P1:  0-9   -> FLT_P2
+         *     -> BAD
+FLT_P2:  0-9   -> FLT_P2
+         E e  -> FLT_PE1
+         \n    -> GOOD
+         *     -> BAD
+FLT_PE1: \-    -> FLT_PE2
+         0-9   -> FLT_PE3
+         *     -> BAD
+FLT_PE2: 1-9   -> FLT_PE3
+         *     -> BAD
+FLT_PE3: 0-9   -> FLT_PE3
+         \n    -> GOOD
+         *     -> BAD
+DEF_1:   a-z A-Z 0-9 \- \_ -> DEF_1
+         \n                -> GOOD
+         *                 -> BAD
+VAR_1:   a-z A-Z 0-9 -> VAR_2
+         *           -> BAD
+VAR_2:   a-z A-Z 0-9 -> VAR_2
+         \n          -> GOOD
+         *           -> BAD
+COM_1:   \n -> GOOD
+         *  -> COM_1
+STR_1:   \\ -> STR_2
+         "  -> STR_5
+         \n -> BAD
+         *  -> STR_1
+STR_2:   "  -> STR_3
+         \\ -> STR_4
+         *  -> BAD
+STR_3:   "  -> STR_5
+         \n -> BAD
+         *  -> STR_1
+STR_4:   "  -> STR_5
+         \n -> BAD
+         *  -> STR_1
+STR_5:   \n -> GOOD
+         *  -> BAD
+SEP_1:   \s    -> SEP_1
+         \(    -> SEP_2
+         \n    -> GOOD
+         *     -> BAD
+SEP_2:   ^(    -> SEP_2
+//         ^)    -> SEP_2
+         \)    -> SEP_3
+         *     -> BAD
+SEP_3:   \n    -> GOOD
+         \(    -> SEP_2
+         *     -> BAD
+GOOD(OK):

@@ -1,0 +1,34 @@
+START=READY
+READY:   \+ \- -> FLT_1
+         0-9   -> FLT_2
+         *     -> BAD
+FLT_1:   0-9   -> FLT_2
+         *     -> BAD
+FLT_2:   0-9   -> FLT_2
+         [Ee]  -> FLT_E1
+         \.    -> FLT_P1
+         *     -> BAD
+FLT_E1:  \-    -> FLT_E2
+         0-9   -> FLT_E3
+         *     -> BAD
+FLT_E2:  1-9   -> FLT_E3
+         *     -> BAD
+FLT_E3:  0-9   -> FLT_E3
+         \.    -> FLT_P1
+         \n    -> GOOD
+         *     -> BAD
+FLT_P1:  0-9   -> FLT_P2
+         *     -> BAD
+FLT_P2:  0-9   -> FLT_P2
+         [Ee]  -> FLT_PE1
+         \n    -> GOOD
+         *     -> BAD
+FLT_PE1: \-    -> FLT_PE2
+         0-9   -> FLT_PE3
+         *     -> BAD
+FLT_PE2: 1-9   -> FLT_PE3
+         *     -> BAD
+FLT_PE3: 0-9   -> FLT_PE3
+         \n    -> GOOD
+         *     -> BAD
+GOOD(OK):

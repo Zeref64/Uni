@@ -1,0 +1,624 @@
+Εργαστήριο ΛΣ 1 / Ασκηση 1 / 2020-21
+
+Ονοματεπώνυμο: Κούμανης Βασίλειος
+ΑΜ: 19390104
+
+--Ερώτηση 1--
+
+Δημιουργήστε στον τρέχοντα κατάλογο το αρχείο 'ask1.txt' με τα ακόλουθα περιεχόμενα (όνομα, επώνυμο,
+username, ΤΚ, περιοχή, τηλ.), και εμφανίστε το στη συνέχεια στην οθόνη, με αριθμημένες τις γραμμές του.
+
+George Pappas george2 12136 Peristeri -------
+Nick Nikolaoy nick23 12232 Aigaleo 5314555
+George Georgioy george583 11132 Athens-------
+Helen Georgioy helen3 12136 Peristeri 5748456
+Nick Pappas nick4 11223 Aigaleo 5324123
+Helen Ioannoy helen367 13222 Athens -------
+Helen Thanoy helen36 11132 Peristeri 9718345
+Vasilis Mamalis vas32 12345 Dafni 9738383
+
+//Απάντηση:
+
+Αρχικά, θα χρησιμοποιήσω την εντολή touch οπου δημιουργεί ένα αρχείο με το όνομα που εγώ δίνω
+στην συγκεκριμένη περίπτωση "ask1.txt". Υστερά για να γράψω σε αυτο το αρχείο χρησιμοποιώ τον κειμενοφράφο "nano"
+για να αντιγράψω το κείμενο και να το αποθηκεύσω στο αρχείο.
+Για να εμφανίσω τα περιεχόμενά του αρχείου στην οθόνη χρησιμοποιώ
+την εντολή cat εαν βάλω και τον διακόπτη -n τότε εμφανίζει και τις αριθμημένες γραμμές.
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+1	George Pappas george2 12136 Peristeri -------
+2	Nick Nikolaoy nick23 12232 Aigaleo 5314555
+3	George Georgioy george583 11132 Athens-------
+4	Helen Georgioy helen3 12136 Peristeri 5748456
+5	Nick Pappas nick4 11223 Aigaleo 5324123
+6	Helen Ioannoy helen367 13222 Athens -------
+7	Helen Thanoy helen36 11132 Peristeri 9718345
+8	Vasilis Mamalis vas32 12345 Dafni 9738383
+
+Εντολή -> cat -n ask1.txt
+
+--Ερώτηση 2-- 
+
+Τρέξτε την εντολή cal -3 > calfile.txt και εξηγείστε τι ακριβώς κάνει
+
+//Απάντηση:
+ 
+Η εντολή cal με τον διακόπτη -3 εμφανίζει στην οθόνη τον προηγούμενο, τον επόμενο και ανάμεσα τους τον τωρινό μήνα.
+δημιουργείτε ένα αρχείο catfile.txt και στέλνει το output της cal -3 στο catfile.txt. 
+Συνεπώς το calfile.txt περιέχει μέσα τον επόμενο και ανάμεσα τους τον τωρινό μήνα
+
+Εντολή -> cal -3 > calfile.txt 
+
+Αποτέλεσμα εκτέλεσης της εντολής "Μέσα στο αρχείο calfile.txt":
+zeref@ubuntu:~/OS_Lab_1$ cat calfile.txt 
+                            2020
+      October               November              December        
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+             1  2  3   1  2  3  4  5  6  7         1  2  3  4  5  
+ 4  5  6  7  8  9 10   8  9 10 11 12 13 14   6  7  8  9 10 11 12  
+11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19  
+18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26  
+25 26 27 28 29 30 31  29 30                 27 28 29 30 31    
+
+--Ερώτηση 3--  
+
+Συνενώστε τα αρχεία calfile.txt και ask1.txt σε ένα αρχείο με όνομα full.txt
+
+//Απάντηση:
+
+Θα χρησιμοποιήσω την εντολή cat με σκοπό να εμφανίσω τα 2 αρχεία. 
+Υστερα με την χρήση του τελεστή > δημιουργώ το αρχείο full.txt και στέλνω την έξοδο εκεί.
+
+Εντολή -> cat ask1.txt calfile.txt > full.txt
+
+Αποτέλεσμα εκτέλεσης της εντολής "Μέσα στο αρχείο full.txt":
+
+zeref@ubuntu:~/OS_Lab_1$ cat full.txt 
+George Pappas george2 12136 Peristeri -------
+Nick Nikolaoy nick23 12232 Aigaleo 5314555
+George Georgioy george583 11132 Athens -------
+Helen Georgioy helen3 12136 Peristeri 5748456
+Nick Pappas nick4 11223 Aigaleo 5324123
+Helen Ioannoy helen367 13222 Athens -------
+Helen Thanoy helen36 11132 Peristeri 9718345
+Vasilis Mamalis vas32 12345 Dafni 9738383
+                            2020
+      October               November              December        
+Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  Su Mo Tu We Th Fr Sa  
+             1  2  3   1  2  3  4  5  6  7         1  2  3  4  5  
+ 4  5  6  7  8  9 10   8  9 10 11 12 13 14   6  7  8  9 10 11 12  
+11 12 13 14 15 16 17  15 16 17 18 19 20 21  13 14 15 16 17 18 19  
+18 19 20 21 22 23 24  22 23 24 25 26 27 28  20 21 22 23 24 25 26  
+25 26 27 28 29 30 31  29 30                 27 28 29 30 31        
+
+
+--Ερώτηση 4--
+
+Εμφανίστε στην οθόνη τα πέντε πιο πρόσφατα τροποποιημένα αρχεία του καταλόγου σας.
+
+//Απάντηση:
+
+Θα χρησιμοποιήσω την εντολή ls όπου εμφανίζει τα περιεχόμενα του τρέχοντα καταλόγου με τους διακόπτες:
+-l για να μου εμφανίζει τα περιεχόμενα σε μορφή long listing
+-t που ταξινομεί τα περιεχόμενά με την σειρά τροποποίησης 
+-a για να εμφανίσει και όλα τα κρυφά αρχεία εκτός από "." & ".."
+Υστερα, θα τα στείλω την έξοδο με "|" στην εντόλή grep με σκοπό να μου εμφανίζει μόνο αρχεία και όχι καταλόγους
+και τέλος τα στέλνω στην head -5 που εμφανίζει τις 5 πρώτες γραμμές.
+
+Εντολή -> ls -lta | grep "^-" | λhead -5 
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+zeref@ubuntu:~/OS_Lab_1$ ls -lta | grep "^-" | head -5 
+-rw-rw-r--  1 zeref zeref  312 Nov 27 00:48 TEMP
+-rw-rw-r--  2 zeref zeref  312 Nov  9 02:58 ask1.txt
+-rw-rw-r--  1 zeref zeref  926 Nov  9 00:42 full.txt
+-rw-rw-r--  1 zeref zeref  573 Nov  9 00:41 calfile.txt
+-rw-rw-r--  1 zeref zeref    0 Nov  9 00:40 games
+
+--Ερώτηση 5-- 
+
+Δημιουργήστε έναν κατάλογο με όνομα 'mydir1'. Μεταβείτε σε αυτόν και στη συνέχεια αντιγράψτε εκεί (χωρίς
+να αλλάξετε κατάλογο) το αρχείο 'full.txt' (από το γονικό κατάλογο). Μετονομάστε το εν συνεχεία σε 'new.txt'.
+Επιστρέψτε στο γονικό κατάλογο. Διαγράψτε τον κατάλογο 'mydir1' και τα περιεχόμενά του.
+
+//Απάντηση
+
+Για να φτιάξω έναν κατάλογο χρησιμοποιώ την εντολή mkdir. Μετά με την χρήση της εντολής cp αντιγράφω το
+αρχείο στον κατάλογο με διαφορετικό όνομα. Τέλος με την εντολή rm -r σβήνω τον κατάλογο.
+Πρέπει να σημειωθεί πως στην rm χρησιμοποιήθηκε ο διακόπτης -r που διαγράφει αναδρομίκα με σκοπό την διαγραφή του καταλόγου με περιεχόμενο.
+
+Εντολές -> 
+zeref@ubuntu:~/OS_Lab_1$ mkdir mydir1
+zeref@ubuntu:~/OS_Lab_1$ cd mydir1/
+zeref@ubuntu:~/OS_Lab_1/mydir1$ cp ../full.txt ./new.txt
+zeref@ubuntu:~/OS_Lab_1/mydir1$ cd ..
+zeref@ubuntu:~/OS_Lab_1$ rm -r mydir1/
+
+Αποτέλεσμα εκτέλεσης της εντολών:
+
+zeref@ubuntu:~/OS_Lab_1$ mkdir mydir1
+zeref@ubuntu:~/OS_Lab_1$ ls
+ask1.txt  calfile.txt  full.txt  games  mydir1 random  test_file4  test_file5  test_file6  test_file7
+zeref@ubuntu:~/OS_Lab_1$ cd mydir1/
+zeref@ubuntu:~/OS_Lab_1/mydir1$ cp ../full.txt ./new.txt
+zeref@ubuntu:~/OS_Lab_1/mydir1$ ls
+new.txt
+zeref@ubuntu:~/OS_Lab_1/mydir1$ cd ..
+zeref@ubuntu:~/OS_Lab_1$ rm -r mydir1/
+zeref@ubuntu:~/OS_Lab_1$ ls
+ask1.txt  calfile.txt  full.txt  games  random  test_file4  test_file5  test_file6  test_file7
+zeref@ubuntu:~/OS_Lab_1$ 
+
+--Ερώτηση 6--  
+
+Δώστε τις εντολές που θα εμφανίσουν: (α) λ/usr με πληροφορίες για το inode
+τους και το μέγεθος τους σε blocks. (β) όλα τα περιεχόμενα του δέντρου καταλόγων και υποκαταλόγων
+(αναδρομικά) που βρίσκονται κάτω από τον κατάλογο /usr, με πλήρεις πληροφορίες για κάθε ένα από αυτά
+και εμφανιζόμενα σταδιακά, σελίδα προς σελίδα.
+
+//Απάντηση:
+
+(α) Θα χρησιμοποιήσω την εντολή ls με τους διακόπτες :
+-l για την εμφάνιση σε μορφή long list
+-a για να εμφανίσει όλα τα αρχεία δηλαδή και τα κρυφά
+-i για να εμφανίσει και το inode τπυ κάθε αρχείουc
+
+(β) Θα χρησιμοποιήσω παλι την εντολή ls αυτήν την φορά στον κατάλογο /usr με τους διακόπτες :
+-l, -a, -i,
+-R για την εμφάνιση όλων των αρχείων αναδρομικά 
+καιμετά θα στείλω την έξοδο με "|" στο πρόγραμμα less για να τα εμφανίσει σταδιακά σελίδα προς σελίδα.
+
+Εντολές -> (α) ls -lai
+(β) ls -laiR | less
+
+Αποτέλεσμα εκτέλεσης της εντολών:
+
+(α) 
+zeref@ubuntu:/usr$ ls -lai
+total 100
+1441793 drwxr-xr-x  10 root root  4096 Aug  7 01:32 .
+      2 drwxr-xr-x  24 root root  4096 Oct 20 12:56 ..
+1441794 drwxr-xr-x   2 root root 49152 Nov  6 17:19 bin
+1441795 drwxr-xr-x   2 root root  4096 Aug  7 01:36 games
+1441796 drwxr-xr-x   7 root root  4096 Oct 20 12:42 include
+1441797 drwxr-xr-x 107 root root  4096 Oct 20 12:55 lib
+1441798 drwxr-xr-x  10 root root  4096 Aug  7 01:32 local
+1441799 drwxr-xr-x   2 root root 12288 Nov  6 17:18 sbin
+1441800 drwxr-xr-x 248 root root 12288 Oct 20 12:44 share
+1441801 drwxr-xr-x   6 root root  4096 Oct 20 12:55 src
+
+(β)
+.:
+total 100
+1441793 drwxr-xr-x  10 root root  4096 Aug  7 01:32 .
+      2 drwxr-xr-x  24 root root  4096 Oct 20 12:56 ..
+1441794 drwxr-xr-x   2 root root 49152 Nov  6 17:19 bin
+1441795 drwxr-xr-x   2 root root  4096 Aug  7 01:36 games
+1441796 drwxr-xr-x   7 root root  4096 Oct 20 12:42 include
+1441797 drwxr-xr-x 107 root root  4096 Oct 20 12:55 lib
+1441798 drwxr-xr-x  10 root root  4096 Aug  7 01:32 local
+1441799 drwxr-xr-x   2 root root 12288 Nov  6 17:18 sbin
+1441800 drwxr-xr-x 248 root root 12288 Oct 20 12:44 share
+1441801 drwxr-xr-x   6 root root  4096 Oct 20 12:55 src
+
+./bin:
+total 134872
+1441794 drwxr-xr-x  2 root root       49152 Nov  6 17:19 .
+1441793 drwxr-xr-x 10 root root        4096 Aug  7 01:32 ..
+1441814 -rwxr-xr-x  1 root root       51384 Jan 18  2018 [
+1442925 -rwxr-xr-x  1 root root          96 Sep 30 16:38 2to3-2.7
+1441804 -rwxr-xr-x  1 root root       10104 Apr 23  2016 411toppm
+1441805 -rwxr-xr-x  1 root root          39 Feb  5  2018 7z
+1441806 -rwxr-xr-x  1 root root          40 Feb  5  2018 7za
+1441807 -rwxr-xr-x  1 root root          40 Feb  5  2018 7zr
+1441815 -rwxr-xr-x  1 root root       22696 Sep 27  2018 aa-enabled
+1441816 -rwxr-xr-x  1 root root       22696 Sep 27  2018 aa-exec
+1441817 -rwxr-xr-x  1 root root       18504 Feb 15  2017 aconnect
+1441818 -rwxr-xr-x  1 root root       14608 Apr 28  2017 acpi_listen
+1451264 -rwxr-xr-x  1 root root        7415 Aug  7 17:07 add-apt-repository
+1442389 -rwxr-xr-x  1 root root       22608 Sep 16 21:43 addpart
+1441821 lrwxrwxrwx  1 root root          26 Oct 20 12:36 addr2line -> x86_64-linux-gnu-addr2line
+1441822 -rwxr-xr-x  1 root root       43144 Feb 15  2017 alsabat
+1441823 -rwxr-xr-x  1 root root       76792 Feb 15  2017 alsaloop
+1441824 -rwxr-xr-x  1 root root       68024 Feb 15  2017 alsamixer
+1441825 -rwxr-xr-x  1 root root       10312 Feb 15  2017 alsatplg
+1441826 -rwxr-xr-x  1 root root       14784 Feb 15  2017 alsaucm
+1441827 -rwxr-xr-x  1 root root       22608 Feb 15  2017 amidi
+1441828 -rwxr-xr-x  1 root root       51424 Feb 15  2017 amixer
+:
+etc..
+
+--Ερώτηση 7-- 
+
+Δημιουργήστε έναν κατάλογο με όνομα 'testdir1'. Μεταβείτε σε αυτόν και φτιάξτε εκεί ένα hard link (με το
+όνομα 'ask1link') προς το αρχείο 'ask1.txt' του;; γονικού καταλόγου. Βεβαιωθείτε (δίνοντας την κατάλληλη
+εντολή και εξηγώντας τι βλέπετε) ότι έχει δημιουργηθεί και ότι δεν είναι symbolic (soft) link.
+
+//Απάντηση:
+
+Φτιάχνω κατάλογο με την mkdir, φτιαχνω ενα hard link με την εντολή ln και τέλος κάνω ls -l για να 
+δώ αν υπάρχει το hard link με τον αριθμό δεξιά απο τα permissions. Εαν ηταν softlink ο αριθμός θα ήταν 1
+και θα είχε τον τελεστή ->.
+
+Εντολές -> mkdir testdir1
+ln ../ask1.txt ask1link
+ls -l 
+
+Αποτέλεσμα εκτέλεσης της εντολών:
+
+zeref@ubuntu:~/OS_Lab_1$ mkdir testdir1
+zeref@ubuntu:~/OS_Lab_1$ cd testdir1/
+zeref@ubuntu:~/OS_Lab_1/testdir1$ ln ../ask1.txt ask1link.txt
+zeref@ubuntu:~/OS_Lab_1/testdir1$ ls -l
+total 4
+-rw-rw-r-- 2 zeref zeref 353 Nov  9 00:41 ask1link.txt
+zeref@ubuntu:~/OS_Lab_1/testdir1$ 
+
+
+--Ερώτηση 8-- 
+
+Μπείτε στο αρχείο 'ask1link' και διαγράψτε την τελευταία του γραμμή. Βεβαιωθείτε στη συνέχεια ότι η αλλαγή
+αυτή έχει γίνει και στο αρχείο 'ask1.txt'.
+nan
+//Απάντηση:
+
+Μπήκα στο αρχείο ask1link με το πρόγραμμα nano και έσβησα την τελευταία του γραμμή 
+μετά έκανα cd .. και cat ask1.txt και η τελευταία γραμμη δεν υπήρχε.
+
+Εντολές -> nano ask1link
+cd..
+cat ask1.txt
+
+Αποτέλεσμα εκτέλεσης της εντολών:
+
+zeref@ubuntu:~/OS_Lab_1/testdir1$ nano ask1link.txt 
+	[Σβήσιμο της τελευταίας γραμμής]
+zeref@ubuntu:~/OS_Lab_1/testdir1$ cd ..
+zeref@ubuntu:~/OS_Lab_1$ cat ask1.txt 
+George Pappas george2 12136 Peristeri -------
+Nick Nikolaoy nick23 12232 Aigaleo 5314555
+George Georgioy george583 11132 Athens-------
+Helen Georgioy helen3 12136 Peristeri 5748456
+Nick Pappas nick4 11223 Aigaleo 5324123
+Helen Ioannoy helen367 13222 Athens -------
+Helen Thanoy helen36 11132 Peristeri 9718345
+
+--Ερώτηση 9--
+Δημιουργήστε ένα κατάλογο kat1 και μέσα σε αυτόν δύο αρχεία, file1 και file2, με περιεχόμενο τη λέξη 'one' το
+ένα και τη λέξη 'two' το άλλο. Τρέξτε (μέσα στον κατάλογο kat1) την εντολή 'cp *' και εξηγήστε το αποτέλεσμα.
+Στη συνέχεια τρέξτε την εντολή 'mv *' και εξηγήστε το αποτέλεσμα.
+
+// Απάντηση
+
+Ο χαρακτήρας " * " ειναι μπαλαντέρ δηλαδή είναι όλοι οι χαρακτήρες με την σειρά. Η βασική σύνταξη της εντολής cp έιναι
+"cp [Source] [Destination]". Άρα όταν γράφω cp * είναι σαν να γράφω cp file1 file2 που έχει σαν αποτέλεσμα το file2
+να περιέχει τα περιεχόμενα του file1 "one". Η εντόλη mv μεταφέρει ένα αρχείο από τον τρέχοντα κατάλογο σε έναν άλλο
+εάν όμως εγώ βαλώ ως όρισμα δύο αρχεία και όχι αρχείο και κατάλογο τότε μεταφέρει το αρχείο στον ίδιο κατάλογο
+με άλλο όνομα άρα όταν εγώ γράφω mv * [mv file1 file 2] μετονομάζω το file1 σε file2 και εφόσον βλέπει πως θα υπάρξουν
+δυο αρχεία με το ίδιο όνομα το κάνει replace.
+
+Εντολές -> mkdir kat1 
+cd kat1
+touch file1 file 2
+nano file1 [προσθέτω το περιεχόμενο one ]
+nano file2 [προσθέτω το περιεχόμενο two ]
+cp *
+mv *
+
+Αποτέλεσμα εκτέλεσης της εντολών:
+
+zeref@ubuntu:~/OS_Lab_1$ mkdir kat1
+zeref@ubuntu:~/OS_Lab_1$ cd kat1/
+zeref@ubuntu:~/OS_Lab_1/kat1$ touch file1 file2
+zeref@ubuntu:~/OS_Lab_1/kat1$ nano file1 
+zeref@ubuntu:~/OS_Lab_1/kat1$ nano file2
+zeref@ubuntu:~/OS_Lab_1/kat1$ cat file1
+one
+zeref@ubuntu:~/OS_Lab_1/kat1$ cat file2
+two
+zeref@ubuntu:~/OS_Lab_1/kat1$ cp *
+zeref@ubuntu:~/OS_Lab_1/kat1$ cat file1
+one
+zeref@ubuntu:~/OS_Lab_1/kat1$ cat file2
+one
+zeref@ubuntu:~/OS_Lab_1/kat1$ mv *
+zeref@ubuntu:~/OS_Lab_1/kat1$ cat file1
+cat: file1: No such file or directory
+zeref@ubuntu:~/OS_Lab_1/kat1$ cat file2 
+one
+zeref@ubuntu:~/OS_Lab_1/kat1$ ls
+file2
+
+--Ερώτηση 10--  
+
+Εμφανίστε τις γραμμές του αρχείου 'ask1.txt' οι οποίες τελειώνουν με ένα ή περισσότερα ^^ συνεχόμενα ψηφία.
+
+//Απάντηση:
+
+-
+
+--Ερώτηση 11--  
+
+Εμφανίστε τις γραμμές του αρχείου 'ask1.txt' οι οποίες περιέχουν μεν το πρότυπο 'Pap' αλλά δεν περιέχουν το
+πρότυπο 'Aig'.
+
+//Απάντηση:
+
+Θα χρησιμοποιήσω την εντόλη cat για να δω τα εμφανίσω τα περιεχόμενα του αρχείου. Υστερα θα τα στείλω 
+την έξοδο της στην εντολή με την χρήση του " | " σε μια grep όπου βάζω το φίλρο (να περιέχει το Pap) και τέλος 
+τα ξαναστέλνω σε άλλη grep αλλά αυτήν την φορά με τον διακόπτη -v ώστε να μην εμφανίζει τις γραμμές που περιέχουν το "Aig"
+
+Εντολή -> cat ask1.txt | grep "Pap" | grep -v "Aig"
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+zeref@ubuntu:~/OS_Lab_1$ cat ask1.txt | grep "Pap" | grep -v "Aig"
+George Pappas george2 12136 Peristeri -------
+
+--Ερώτηση 12--
+
+Εμφανίστε τις γραμμές του αρχείου 'ask1.txt' οι οποίες δεν αρχίζουν με 'G' ή 'N' και περιέχουν εν συνεχεία
+(κάπου στα περιεχόμενά τους) τα πρότυπα 'Geo' και 'Per' με αυτή τη σειρά.
+
+//Απάντηση:
+
+Για να κάνω OR μεσα στην grep "G OR N" θα χρησιμοποιησω την egrep "αλλιως grep -E" με τον διακόπτη -v και τον τελεστή " ^ " για να
+ορίσω την αρχή της γραμμής να μην είναι G ή N  και με το | στέλνω σε άλλη grep για το "Geo----Per" Δουλεύει με regex οταν κανω .*εννοω
+οτι ψάχνει απο το Geo ολα τα αλλα (. *) μεχρι το Per. 
+
+
+Εντολή -> cat ask1.txt | egrep -v "^[G]|^[N]" | grep "Geo.*Per"
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+zeref@ubuntu:~/OS_Lab_1$ cat ask1.txt | egrep -v "^[G]|^[N]" | grep "Geo.*Per"
+Helen Georgioy helen3 12136 Peristeri 5748456
+
+--Ερώτηση 13--  
+
+Πόσοι χρήστες που το username τους δεν αρχίζει από 'ls1' είναι συνδεδεμένοι στο σύστημα ?
+
+//Απάντηση:
+
+Χρησιμοποιώ την εντολή who για να δω ποια άτομα είναι μέσα και στέλνω την έξοδο της σε μια grep που φιλτράρει 
+τους χρήστες και βγάζει αυτούς που δεν ξεκινάνε απο 'ls1'
+
+Εντολή -> who | grep -v "^ls1"
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+ice19390104@snf-15627:~$ who | grep -v "^ls1"
+zeus     pts/0        2020-11-10 15:05 (83.212.114.23)
+cs141159 pts/1        2020-11-25 22:55 (85.74.248.14)
+ice19390104 pts/2        2020-11-26 00:25 (46.246.191.198)
+ice19390064 pts/3        2020-11-25 20:53 (85.74.103.137)
+ice19390221 pts/4        2020-11-25 23:09 (94.66.59.229)
+cs161131 pts/6        2020-11-25 21:00 (78.87.174.253)
+
+--Ερώτηση 14--
+
+Εμφανίστε όλες τις διεργασίες χρηστών (αλλ/σης) που τρέχουν αυτή τη στιγμή στο σύστημα.
+
+//Απάντηση:
+
+-
+
+--Ερώτηση 15--
+
+Πόσες διεργασίες χρηστών (αλλ/σης) τρέχουν στο σύστημα και τελειώνει το όνομά τους με 'sh' ? 
+
+//Απάντηση:  
+
+-
+
+--Ερώτηση 16--
+
+Ποιες διεργασίες (πάσης μορφής) τρέχουν αυτή τη στιγμή από το λογαριασμό του διαχειριστή ?
+
+//Απάντηση:  
+
+-
+
+--Ερώτηση 17--
+
+Πόσα αρχεία του τρέχοντος καταλόγου σας (μόνο του τρέχοντος - όχι και των υποκαταλόγων του) έχουν
+permissions 'rw' από τους πάντες και 'x' από κανέναν ?
+
+//Απάντηση:  
+
+Θα κάνω ls -lA για να πάρω όλα τα αρχεία και στην συνέχια θα τα στείλω σε μια grep που
+εμφανίζει μόνο τα αρχεία με permissions rw-rw-rw και τον διακόπτη -c που μετράει
+και εμφανίζει τις γραμμές 
+
+Εντολή -> ls -lA | grep -c "^-rw-rw-rw-"
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+zeref@ubuntu:/$ ls -lA | grep -c "^.rw-rw-rw-"
+0 
+(Δεν έχω κανένα αρχείο με αυτά τα permissions )
+
+
+--Ερώτηση 18--
+
+Βρείτε τους καταλόγους του συστήματος που το όνομά τους αρχίζει από 'b'.
+
+//Απάντηση:  
+στην ρίζα "cd /" και τρεχω ενα ls -A για όλα τα κρυφά κρυφά αρχεία και στέλνω την έξοδο της 
+σε μια grep που ψάχνει όλες τις γραμμές που ξεκινάνε με "b"
+
+Εντολή -> ls  -A | grep "^b"
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+zeref@ubuntu:/$ ls  -A | grep "^b"
+bin
+boot
+
+--Ερώτηση 19--
+
+Να βρείτε και να παρουσιάσετε στην οθόνη με πλήρεις πληροφορίες όλα τα αρχεία με όνομα που αρχίζει από
+tty και βρίσκονται στον κατάλογο /dev.
+
+//Απάντηση:  
+
+Χρησιμοποιώ την εντολή ls -l(λίστα) -Α(ολα τα αρχεία εκτός απο το "." & "..") -i(για το inode) 
+και τα στέλνω σε ένα grep με regex που ψάχνει εναν χαρακτήρα δίπλα από ενα κόμμα ',' και όλα τα υπόλοιπα
+μέχρι το "tty". Αυτό το έκανα διότι υπήρχαν αρχεία με group tty αλλά όχι με όνομα που ξεκινάει από tty
+
+Εντολή -> ls -lAi | grep "., .* tty"
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+zeref@ubuntu:/dev$ ls -lAi | grep ".,.*tty"
+   13 crw-rw-rw-  1 root tty       5,   0 Nov 27 00:10 tty
+   15 crw--w----  1 root tty       4,   0 Nov 27 00:10 tty0
+   22 crw--w----  1 root tty       4,   1 Nov 27 00:10 tty1
+   31 crw--w----  1 root tty       4,  10 Nov 27 00:10 tty10
+   32 crw--w----  1 root tty       4,  11 Nov 27 00:10 tty11
+   33 crw--w----  1 root tty       4,  12 Nov 27 00:10 tty12
+   34 crw--w----  1 root tty       4,  13 Nov 27 00:10 tty13
+   35 crw--w----  1 root tty       4,  14 Nov 27 00:10 tty14
+		[...]
+
+--Ερώτηση 20--
+
+Ταξινομήστε τα περιεχόμενα του αρχείου 'ask1.txt' ως προς το username σε φθίνουσα σειρά.
+
+//Απάντηση:  
+
+Κάνω sort με τους διακόπτες -r για να ταξινομεί σε φθήνουσα σειρά -k για να κάνω σύγκριση σε ένα συγκεκριμένη στήλη
+και δίνω τον αρίθμο της στήλης που θέλω δηλαδή στήλη 3. (username)   
+
+
+Εντολή ->  sort -r -k 3 ask1.txt
+
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+zeref@ubuntu:~/OS_Lab_1$ sort -r -k 3 ask1.txt 
+Nick Pappas nick4 11223 Aigaleo 5324123
+Nick Nikolaoy nick23 12232 Aigaleo 5314555
+Helen Ioannoy helen367 13222 Athens -------
+Helen Thanoy helen36 11132 Peristeri 9718345
+Helen Georgioy helen3 12136 Peristeri 5748456
+George Georgioy george583 11132 Athens-------
+George Pappas george2 12136 Peristeri -------
+
+
+--Ερώτηση 21--
+
+Ταξινομήστε τα '.c' αρχεία του καταλόγου στον οποίον δουλεύετε ως προς το μέγεθός τους.
+
+//Απάντηση:  
+
+Θα κάνω ls -l για long list -Α για ολα τα αρχεία και -h για να φένεται το μέγεθος καλύτερα "Kb Mb Gb"μετά χρήσιμοποιώ άλλον διακόπτη
+τον --sort μαι παράμετρο size για μέγεθος και *.c για να δω μόνο τα αρχεία που τελείωνουν σε .c
+
+Εντολή -> ls -lAh --sort=size  *.c
+
+Αποτέλεσμα εκτέλεσης εντολής:
+
+zeref@ubuntu:~$ ls -lAh --sort=size  *.c
+-rw-rw-r-- 1 zeref zeref 109 Nov 26 23:22  test.c
+-rw-rw-r-- 1 zeref zeref  20 Nov 27 19:11  program1.c
+-rw-rw-r-- 1 zeref zeref  12 Nov 27 19:10  hello.c`
+-rw-rw-r-- 1 zeref zeref  11 Nov 27 19:11 'hello world.c'
+
+--Ερώτηση 22--
+
+Ταξινομήστε τα αρχεία του λογαριασμού σας με permissions 644 ως προς το μέγεθός τους 
+
+//Απάντηση:  
+
+Θα κάνω μια παρόμοια ls με την παραπάνω και τα στέλνω στην grep για να βλέπω μόνο τα αρχεία με permissions 644
+
+Εντολή -> ls -lAh --sort=size | grep "^-rw-r--r--"
+
+Αποτέλεσμα εκτέλεσης εντολής:
+zeref@ubuntu:~$ ls -lAh --sort=size | grep "^-rw-r--r--"
+-rw-r--r--  1 zeref zeref 3.7K Oct 20 12:41 .bashrc
+-rw-r--r--  1 zeref zeref 1.6K Oct 20 12:41 .Xdefaults
+-rw-r--r--  1 zeref zeref  807 Oct 20 12:41 .profile
+-rw-r--r--  1 zeref zeref  220 Oct 20 12:41 .bash_logout
+-rw-r--r--  1 zeref zeref   26 Oct 20 12:46 .dmrc
+-rw-r--r--  1 zeref zeref   14 Oct 20 12:41 .xscreensaver
+-rw-r--r--  1 zeref zeref    0 Oct 20 12:48 .sudo_as_admin_successful
+
+--Ερώτηση 23--
+
+Ταξινομήστε όλα τα περιεχόμενα του καταλόγου /dev κατά πρώτον ως προς τον owner και κατά δεύτερον ως
+προς το group και αποθηκεύστε το output στο αρχείο 'binfiles.txt'.
+
+//Απάντηση:  
+
+Πηγαίνω στον κατάλογο /dev, κάνω ls -lA και τα στέλνω σε μια sort με παραμέτρους -k 3 για 3η στήλη δηλαδή owner 
+και -k 4 για 4η στήλη δηλαδη group και τέλος τα στέλνω στο αρχείο binfiles.txt την πρώτη φορά με > και την δεύτερη φορά append >>
+
+Εντολές -> ls -lA | sort -k 3 > ~/OS_Lab_1/binfiles.txt 
+ls -lA | sort -k 4 >> ~/OS_Lab_1/binfiles.txt 
+
+--Ερώτηση 24--
+
+Φτιάξτε ένα αρχείο που θα περιέχει πληροφορίες μόνο για τους συνδεδεμένους χρήστες που το username
+τους αρχίζει από 'ls1', ταξινομημένο ως προς την ημερομηνία και ώρα σύνδεσή τους.
+
+//Απάντηση:  
+
+-
+
+--Ερώτηση 25--
+
+Αλλάξτε στο αρχείο 'ask1.txt' το όνομα 'Nick' (όπου συναντάται) σε 'Nickolaos'.
+
+//Απάντηση:  
+
+-
+
+--Ερώτηση 26--
+
+Έστω τα ακόλουθα items του file system με protection strings: (α) '-rwxr-x--x', 
+(β) 'drwxr-x--- ' και (γ) 'drwx--x--x.
+
+//Απάντηση:  
+
+-
+
+--Ερώτηση 27--
+
+Αλλάξτε τα permissions όλων των αρχείων του καταλόγου 'testdir1' έτσι ώστε να έχουν δικαίωμα εκτέλεσης και
+εγγραφής μόνο ο ιδιοκτήτης, ενώ δικαίωμα ανάγνωσης να έχουν όλοι.
+
+//Απάντηση:
+
+Θα χρησιμοποιήσω την εντολή chmod με τον διακόπτη -R για να εφαρμοστεί αναδρομίκα και σε υποκαταλόγους 
+με παράμετρο το 744 δηλαδή "-rwxr--r--" στον κατάλογο testdir1
+
+Εντολή -> chmod -R 744 testdir1/
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+zeref@ubuntu:~/OS_Lab_1/testdir1$ ls -lA
+total 12
+-rwxr--r-- 2 zeref zeref  312 Nov  9 02:58 ask1link.txt
+-rwxr--r-- 1 zeref zeref    0 Nov 29 14:06 cat
+-rwxr--r-- 1 zeref zeref    0 Nov 29 14:06 dog
+-rwxr--r-- 1 zeref zeref    0 Nov 29 14:06 testfile1
+-rwxr--r-- 1 zeref zeref    0 Nov 29 14:06 toast
+-rwxr--r-- 1 zeref zeref    0 Nov 29 14:06 tst2
+
+--Ερώτηση 28--
+
+Αλλάξτε τα permissions του καταλόγου 'testdir1' έτσι ώστε να έχουν δικαίωμα πρόσβασης μόνο ο ιδιοκτήτης
+και οι χρήστες του ιδίου με αυτό, ενώ οι υπόλοιποι χρήστες να μην έχουν (θεωρείστε ότι τα τρέχοντα
+permissions του καταλόγου είναι 755)
+
+//Απάντηση:
+
+Θα κάνω chmod με 7 για τον owner (rwx) 5 για το group (r-x) και 0 για τους others (---) στον φάκελο testdir1.
+Μονο με το permission 'x' μπορεί κάποιος να μπεί σε ένα directory.
+
+Εντολή -> chmod 750 testdir1/
+
+Αποτέλεσμα εκτέλεσης της εντολής:
+
+drwxr-x---  2 zeref zeref  4096 Nov 29 14:06 testdir1/ 
+(Τώρα μονο ο owner και το group του μπορούν να ανοίξουν αυτό το directory).

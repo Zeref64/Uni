@@ -1,0 +1,54 @@
+Integers:
+-Start on Ready
+-Check for sign. If signed, go to median state INT_1, else go to INT_2
+-Remain on INT_2 while typing numbers
+-Return GOOD on EOL
+-Drop from anywhere if non-number is input
+
+Floats:
+-Start on Ready
+-Check for sign. If signed, go to median state FLT_1, else go to FLT_2
+-Remain on FLT_2 while typing numbers
+-If exponent (E/e) is input, go to "E-branch" (FLT_E*)
+-If point (.) is input, go to "P-branch" (FLT_P*)
+-Move from branch to branch if both exponent and point are input
+-Repeat number-checking while on branches
+-Return GOOD if number valid
+-Drop from anywhere if invalid character
+
+Facts:
+-Start on Ready
+-Begin with letter
+-Continue with letters, numbers, dashes and underscores
+-Drop from anywhere if invalid character
+
+Variables:
+-Start on Ready
+-Begin with variable operand (?)
+-Continue with any letter and/or number
+-Drop from anywhere if anything else is input
+
+Comments:
+-Start on Ready
+-Begin with comment identifier (;)
+-Continue with anything until EOL
+-Drop only if ; is mistyped/forgotten
+
+Strings:
+-Start on Ready
+-Begin with "
+-End comment on second "
+-If \ is input, ignore next " (if input right after it)
+-Drop if odd number of ", or if invalid character after \ (will not escape in comments)
+
+Separators:
+-Start on Ready
+-If blank character (\s) is input, check next character
+-Repeat for every blank character
+-If a parentheses is opened, make sure it is closed
+-Drop if parentheses does not closed
+
+Total (everything in one machine):
+-FSM begins by checking the input to determine type
+-If it's number, assumes integer unless exponent or point is input, in which case moves to float
+-Rest of FSM is copy of the individual FSMs

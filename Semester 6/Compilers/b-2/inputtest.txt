@@ -1,0 +1,68 @@
+(color A is blue)
+(number_of_cuber 2)
+(pi is 3.14)
+(10.1e-13222)
+(this is a long fact to see how many ?arguments 1 can-have)
+
+(deffacts nAmE (color A)
+(COLOR B) (CoLoRRR c) (num-de-cube 231421) (3123 ?1 134)
+)
+
+(defrule rule
+(this time)
+(the following works)
+(test(= ?num 2))
+->
+(printout ("now we are")("testing" ?strings)))
+
+
+(defrule rule
+(test(= ?num 6))
+->
+(printout (?smth)))
+
+
+
+
+
+;Let's include
+;some comments to make sure
+(+ 3 2 4 543 -2 -1 +321 72984)
+(* ?d ?fd)(/ 23892 ?321f
+3224);even seperating lines works
+(/ -23 +213 ?aaaaa)
+
+^%
+!!!
+||
+>
+>
+>
+>
+>>>>.
+
+
+
+(= ?num 2)(= 100 (* ?x ?x ?x +44444					 ));;operation-comparison!!!!!!!
+(= 2 ?132) 
+
+(= ?r (/ 20 100 ?re))
+(= (- ?red 100 ?k) ?x3)
+(= (+ ?x 100 ?kap) 555)
+
+(bind ?var 20)
+(bind ?fa (read))
+
+(test (= (+ ?x 100 ?kap) 555))
+(test (= (- ?red 100 ?k) ?x3))
+(test (= ?r (/ 20 100 ?re)))
+(test (= 2 ?132))
+(test (= ?num 2)) 
+(test (= 100 (* ?x ?x ?x +44444				 )))
+
+
+(- 20 30 ?x ?g 56 78)
+
+
+(bind ?r (- 20 30 ?x ?g))
+

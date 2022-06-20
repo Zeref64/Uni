@@ -1,0 +1,43 @@
+START=READY
+READY:	\- \+	->	INT_0
+		1-9		->	INT_1
+		0-9		->	FLT_1
+		A-Z a-z	->	DEF_0
+		?		->	VAR_0
+		;		->	COM_0
+		*		->	BAD
+INT_0:	0-9		->	INT_1
+		*		->	BAD
+INT_1:	0-9		->	INT_1
+		\.		->	FLT_2
+		\n		->	GOOD
+		*		->	BAD
+FLT_1:	0-9		->	FLT_1
+		\.		->	FLT_2
+		\n		->	GOOD
+		*		->	BAD
+FLT_2:	0-9		->	FLT_3
+		*		->	BAD
+FLT_3:	0-9		->	FLT_3
+		E e		->	FLT_31
+		\n		->	GOOD
+		*		->	BAD
+FLT_31:	\-		->	FLT_32
+		0-9		->	FLT_33
+		*		->	BAD
+FLT_32:	1-9		->	FLT_33
+		*		->	BAD
+FLT_33:	0-9		->	FLT_33
+		\n		->	GOOD
+		*		->	BAD
+DEF_0:	A-Z a-z 0-9 \- \_	->	DEF_0
+		\n		->	GOOD
+		*		->	BAD
+VAR_0:	A-Z a-z 0-9		->	VAR_1
+		*		->	BAD
+VAR_1:	A-Z a-z 0-9		->	VAR_1
+		\n		->	GOOD
+		*		->	BAD
+COM_0:	*		->	COM_0
+		\n		->	GOOD
+GOOD(OK):

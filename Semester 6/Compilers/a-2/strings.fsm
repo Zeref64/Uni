@@ -1,0 +1,16 @@
+START=READY
+READY:   "  -> STR_1
+         *  -> BAD
+STR_1:   \\ -> STR_2
+         "  -> STR_5
+         *  -> STR_1
+STR_2:   "  -> STR_3
+         \\ -> STR_4
+         *  -> BAD
+STR_3:   "  -> STR_5
+         *  -> STR_1
+STR_4:   "  -> STR_5
+         *  -> STR_1
+STR_5:   \n -> GOOD
+         *  -> BAD
+GOOD(OK):

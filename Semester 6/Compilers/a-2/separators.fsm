@@ -1,0 +1,14 @@
+START=READY
+READY:   \s    -> SEP_1
+         \(    -> SEP_2
+         *     -> BAD
+SEP_1:   \s    -> SEP_1
+         \(    -> SEP_2
+         \n    -> GOOD
+         *     -> BAD
+SEP_2:   [^()] -> SEP_2
+         \)    -> SEP_3
+SEP_3:   \n    -> GOOD
+         \(    -> SEP_2
+         *     -> BAD
+GOOD(OK):

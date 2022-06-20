@@ -1,0 +1,35 @@
+(+ 30  40)
+(+ 23 50)
+(+ 30 +40)
+(+ 30 - 40)
+( 30 / 40)
+
+
+
+(defrule TRY 
+(this is trial)
+(test(= ?num 2))
+->
+(printout ("Look ma!"))
+)
+
+^%
+!!!
+||
+>
+>
+>
+>
+>>>>.
+
+
+(defrule TRY
+(this is trial)
+(test(= ?num 2))
+->
+(printout "Look ma!")
+)
+
+
+(bind ?x (read))
+(bind ?x (raed))

@@ -1,0 +1,26 @@
+120	yes
+12	yes
+0	no
+012	no
+-12	yes
++12	yes
+12.24	yes
+-12.24	yes
++12.24	yes
+012.24	yes
+12e12	yes
+12ea	no-error
+arule	yes
+aRule	yes
+a0ther	yes
+a0th#r	no-error
+?var	yes
+?Var	yes
+?v4r	yes
+;comm	yes
+;C0mm	yes
+"test"	yes
+"test\n		no
+"tes\"t"	yes
+\s	yes	(i mean a simple spacebar)
+\sasds	no-error
