@@ -38,15 +38,12 @@ def cleanText (tokenList, language):
 
 def main():
 #! Task 1)
-    #! Task 1α)
-        #! i)
     print("\n================(i)================\n")
     # print("Λεξικός πλούτος του κειμένου 'Monty Python and the Holy Grail' είναι -> ", lexicalRichness(text6))
     #? Creating an object that contains the counter and the percentage 
     LAUNCELOT_Appearance = calculateWordAppearance(text6, "LAUNCELOT") #? Calculate the word appearance and the percentage for the word 'LAUNCELOT' in text6
     # print("Η λέξη: 'LAUNCELOT' βρέθηκε -> [",LAUNCELOT_Appearance.wordCounter, "]φορές\nμε συχνότητα: [",LAUNCELOT_Appearance.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
 
-        #! ii)
     print("\n================(ii)================\n")
     # print("Λεξικός πλούτος του κειμένου 'Chat Corpus' is -> ", lexicalRichness(text5))
 
@@ -59,7 +56,6 @@ def main():
     lol_Appearance = calculateWordAppearance(text5, "lol")
     # print("Η λέξη: 'lol' βρέθηκε -> [",lol_Appearance.wordCounter, "] φορές\nμε συχνότητα: [",lol_Appearance.percentageFound,"] στο κείμενο 'Chat Corpus'")
 
-    #! Task 1β)
     print("\n================(1β Α)================\n")
     
     wordList1 = ["ok","lmao","hi"]
@@ -132,6 +128,7 @@ def main():
     lemmatizedText1 = [wnl.lemmatize(t) for t in mytokens1]
     # print(lemmatizedText1)
 
+#! Task 6)
     print("\n================(5δ)================\n")
     wnl = nltk.WordNetLemmatizer()
     lemmatizedText2 = [wnl.lemmatize(t) for t in mytokens2]
@@ -169,6 +166,7 @@ def main():
     tokenizedGreekList64 = nltk.word_tokenize(greeksentence64)
     # print(tokenizedGreekList64)
 
+#! Task 7)
     print("\n================(7)================\n")
 
     # print(string.punctuation)
@@ -189,6 +187,7 @@ def main():
     # 
     # print (cleanText(tokenizedList64, "english"))
 
+#! Task 8)
     print("\n================(8)================\n")
 
     text2First200w = []
@@ -197,10 +196,7 @@ def main():
 
     print(len(text2First200w))
     print(len(cleanText(text2First200w, "english")))
-
     
-
-
     return 0
 
 if __name__ == "__main__":
