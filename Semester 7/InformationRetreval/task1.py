@@ -1,6 +1,7 @@
 from nltk.book import *
 import nltk.tokenize
 import nltk 
+import string
 
 class WORD_STATS:        #? Creating an object in order to return two attributes at once
     wordCounter = 0
@@ -23,6 +24,16 @@ def calculateWordAppearance(text, word):
     L1 = WORD_STATS(wordCounter, percentageFound)
     return L1 #? Creating an object in order to return two attributes at once
 
+
+def cleanText (tokenList, language):
+    
+    stopwords = nltk.corpus.stopwords.words(language)
+    cleanedTokens = []
+    for token in tokenList:
+        if token not in string.punctuation and token not in stopwords:
+            cleanedTokens.append(token)
+    return cleanedTokens
+
 # -----------------------------------------------
 
 def main():
@@ -30,23 +41,23 @@ def main():
     #! Task 1α)
         #! i)
     print("\n================(i)================\n")
-    print("Λεξικός πλούτος του κειμένου 'Monty Python and the Holy Grail' είναι -> ", lexicalRichness(text6))
+    # print("Λεξικός πλούτος του κειμένου 'Monty Python and the Holy Grail' είναι -> ", lexicalRichness(text6))
     #? Creating an object that contains the counter and the percentage 
     LAUNCELOT_Appearance = calculateWordAppearance(text6, "LAUNCELOT") #? Calculate the word appearance and the percentage for the word 'LAUNCELOT' in text6
-    print("Η λέξη: 'LAUNCELOT' βρέθηκε -> [",LAUNCELOT_Appearance.wordCounter, "]φορές\nμε συχνότητα: [",LAUNCELOT_Appearance.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
+    # print("Η λέξη: 'LAUNCELOT' βρέθηκε -> [",LAUNCELOT_Appearance.wordCounter, "]φορές\nμε συχνότητα: [",LAUNCELOT_Appearance.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
 
         #! ii)
     print("\n================(ii)================\n")
-    print("Λεξικός πλούτος του κειμένου 'Chat Corpus' is -> ", lexicalRichness(text5))
+    # print("Λεξικός πλούτος του κειμένου 'Chat Corpus' is -> ", lexicalRichness(text5))
 
     omg_Appearance = calculateWordAppearance(text5, "omg")  #? Same logic as above
-    print("Η λέξη: 'omg' βρέθηκε -> [", omg_Appearance.wordCounter, "]φορές\nμε συχνότητα: [",omg_Appearance.percentageFound,"] στο κείμενο: 'Chat Corpus'")
+    # print("Η λέξη: 'omg' βρέθηκε -> [", omg_Appearance.wordCounter, "]φορές\nμε συχνότητα: [",omg_Appearance.percentageFound,"] στο κείμενο: 'Chat Corpus'")
 
     OMG_Appearance = calculateWordAppearance(text5, "OMG")
-    print("Η λέξη: 'OMG' βρέθηκε -> [",OMG_Appearance.wordCounter, "] φορές\nμε συχνότητα: [",OMG_Appearance.percentageFound,"] στο κείμενο 'Chat Corpus'")
+    # print("Η λέξη: 'OMG' βρέθηκε -> [",OMG_Appearance.wordCounter, "] φορές\nμε συχνότητα: [",OMG_Appearance.percentageFound,"] στο κείμενο 'Chat Corpus'")
 
     lol_Appearance = calculateWordAppearance(text5, "lol")
-    print("Η λέξη: 'lol' βρέθηκε -> [",lol_Appearance.wordCounter, "] φορές\nμε συχνότητα: [",lol_Appearance.percentageFound,"] στο κείμενο 'Chat Corpus'")
+    # print("Η λέξη: 'lol' βρέθηκε -> [",lol_Appearance.wordCounter, "] φορές\nμε συχνότητα: [",lol_Appearance.percentageFound,"] στο κείμενο 'Chat Corpus'")
 
     #! Task 1β)
     print("\n================(1β Α)================\n")
@@ -55,18 +66,18 @@ def main():
 
     for word in wordList1:
         wordAppearance = calculateWordAppearance(text5, word)  
-        print("Η λέξη: ",word," βρέθηκε -> [",wordAppearance.wordCounter, "] φορές\nμε συχνότητα: [",wordAppearance.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
+        # print("Η λέξη: ",word," βρέθηκε -> [",wordAppearance.wordCounter, "] φορές\nμε συχνότητα: [",wordAppearance.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
     print("\n-----------------\n")
     wordList2 = ["GALAHAD","KNIGHT","FATHER"]
     wordAppearance2 = calculateWordAppearance(text6, word) 
     for word in wordList2:
         wordAppearance2 = calculateWordAppearance(text6, word)  
-        print("Η λέξη: ",word," βρέθηκε -> [",wordAppearance2.wordCounter, "] φορές\nμε συχνότητα: [",wordAppearance2.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
+        # print("Η λέξη: ",word," βρέθηκε -> [",wordAppearance2.wordCounter, "] φορές\nμε συχνότητα: [",wordAppearance2.percentageFound,"] στο κείμενο 'Monty Python and the Holy Grail'")
 
 
     # print("""Το συμπέρασμα που βγάζω από το πρώτο πείραμα είναι πως εφόσον η λέξη 'LAUNCELOT' εμφανίζεται 76 φορές που σημαίνει πως στο κείμενο αναφέρθηκαν οι ιππότες τόσες φορές,
     # δηλαδή οι ιππότες αναφέρονται στο ~0.44% του συνόλου των λέξεων μέσα στο συγκεκριμένο κείμενο.""")
-# 
+
     # print("""Για τα επόμενα δύο πειράματα, παρατηρώ ότι η λέξη 'lol' αποτελεί το ~1,5% το οποίο είναι ένα σχετικά μεγάλο ποσοστό και αυτό
     # το στοιχείο οδηγεί την σκέψη μου σε ένα κείμενο που έχει σχέση με διαδυκτιακές συνομιλίες μεταξύ ανθρώπων 'chat' γιατί συνήθως τέτοιες λέξεις χρησιμοποιύνται εκεί
     # σαν αντίδραση η σχόλιο. Το ίδιο θα μπορούσαμε να πούμε και για τις λέξεις 'omg' & 'OMG' αλλά εκείνες εμφανίζονται πολύ λιγότερες φορές.""")
@@ -87,19 +98,19 @@ def main():
     #print(fdist6.most_common(50))
     # fdist6.plot(50) #? graph
     ARTHUR_Appearance = calculateWordAppearance(text6, "ARTHUR")
-    print("""Με βάση τα παραπάνω αποτελέσματα, η λέξη 'LAUNCELOT' εμφανίζεται στο κείμενο 'Monty Python and the Holy Grail' [""", LAUNCELOT_Appearance.wordCounter, """]φορές.
-Η λέξη 'ARTHUR' εμφανίζεται: [""", ARTHUR_Appearance.wordCounter ,"""] φορές, όπου είναι περισσότερες από την 'LAUNCELOT' """)
+    # print("""Με βάση τα παραπάνω αποτελέσματα, η λέξη 'LAUNCELOT' εμφανίζεται στο κείμενο 'Monty Python and the Holy Grail' [""", LAUNCELOT_Appearance.wordCounter, """]φορές.
+# Η λέξη 'ARTHUR' εμφανίζεται: [""", ARTHUR_Appearance.wordCounter ,"""] φορές, όπου είναι περισσότερες από την 'LAUNCELOT' """)
 
 #! Task 4)
     print("\n================(4)================\n")
-    # print ("""Παρατηρώ ότι η παραπάνω κανονικοποίηση της πρότασης κειμένου ξεχωρίζει όλους τους χαρακτήρες σε μια πρόταση ύστερα τους μετατρέπει σε πεζούς.
+# print ("""Παρατηρώ ότι η παραπάνω κανονικοποίηση της πρότασης κειμένου ξεχωρίζει όλους τους χαρακτήρες σε μια πρόταση ύστερα τους μετατρέπει σε πεζούς.
 # Η επίπτωση που μπορώ να σκεφτώ έίναι το γεγονός ότι εαν μετατρέψουμε όλες τις λέξεις σε πεζούς χαρακτήρες τότε δεν θα είναι εφικτή η 
 # εύρεση λέξεων με κεφαλάια που σημαίνει πως θα μειωθεί ο λεκτικός πλούτος του κειμένου μας άρα τα δεδομένα μας δεν θα είναι ακριβείς διοτι
 # οι λέξεις που υπάρχουν και σε κεφαλαία αλλα και σε πεζά θα αναγνωρίζονται μόνο ως πεζά.""")
 
     tokens9=sent9 
     normalized_sent9=[x.upper() for x in tokens9]
-    print (normalized_sent9)
+    # print (normalized_sent9)
 
 #! Task 5)
     print("\n================(5α)================\n")
@@ -107,7 +118,7 @@ def main():
     mytokens1 = mytext1.split(" ")
     porter = nltk.PorterStemmer()
     stemmedToken = [porter.stem(word) for word in mytokens1]
-    #print (stemmedToken)
+    # print (stemmedToken)
 
     print("\n================(5β)================\n")
     mytext2 = "Στην αρχή υπήρχε μόνο το Χάος Πυκνό σκοτάδι σκέπαζε τα πάντα ώσπου από το χάος γεννήθηκε η Γη κι από τη Γη τα βουνά η θάλασσα και μετά ο Ουρανός με τον ήλιο το φεγγάρι και τ' αστέρια Τότε ο Ουρανός και η Γη ενώθηκαν και γέννησαν τους Τιτάνες Μα ο Ουρανός φοβόταν πως κάποιο από τα παιδιά του θα έπαιρνε το θρόνο του Γι αυτό τα έκλεισε όλα στα βάθη της Γης Όµως ο γιος του ο Κρόνος ο πιο δυνατός απ’ τους Τιτάνες τον νίκησε κι έγινε αυτός όλου του κόσµου αρχηγός Παντρεύτηκε τη Ρέα και γέννησαν τρεις θεές και τρεις θεούς: την Ήρα την Εστία και τη Δήµητρα τον Πλούτωνα τον Ποσειδώνα και το Δία Μα κι ο Κρόνος φοβόταν πως κάποιο απ τα παιδιά του θα έπαιρνε το θρόνο του Γι αυτό όταν γεννιόνταν τα κατάπινε Απελπισµένη η Ρέα πήγε και γέννησε το έκτο της παιδί το Δία σε µια σπηλιά σ’ ένα βουνό της Κρήτης Έκρυψε το παιδί εκεί Το φρόντιζαν οι Νύµφες κι έπινε το γάλα µιας κατσίκας της Αµάλθειας Στον Κρόνο έδωσε να καταπιεί µια φασκιωµένη πέτρα"
@@ -131,6 +142,7 @@ def main():
     mytoken3 = [] 
     for i in range(200):
         mytoken3.append(text2[i])
+
     mytoken3 = " ".join(text2[0:200])
     # print (mytoken3)
 
@@ -150,14 +162,46 @@ def main():
 
     print("\n================(6γ)================\n")
 
-    greeksentence64 = "Το αληθινό σου πρόσωπο... Τι είδους... Πρόσωπο είναι; Αναρωτιέμαι... Το πρόσωπο κάτω από τη μάσκα... Είναι αυτό... το αληθινό σου πρόσωπο;"
+    greeksentence64 = "Το αληθινό σου πρόσωπο, Τι είδους; Πρόσωπο είναι; Αναρωτιέμαι... Το πρόσωπο κάτω από τη μάσκα; Είναι αυτό, το αληθινό σου πρόσωπο;"
     splitGreekList64 = greeksentence64.split()
     # print(splitGreekList64)
 
     tokenizedGreekList64 = nltk.word_tokenize(greeksentence64)
     # print(tokenizedGreekList64)
 
-    exit(0)
+    print("\n================(7)================\n")
+
+    # print(string.punctuation)
+    # cleaned_tokens=[]
+    # for token in tokenizedList64:
+        # if token not in string.punctuation:
+            # cleaned_tokens.append(token)
+    # print (tokenizedList64)
+    # print (cleaned_tokens)
+
+    englishStopwords = nltk.corpus.stopwords.words('english')
+    # print(englishStopwords)
+    # print ("Το Αγγλικό αλφάβητο αποτελείται από ->[", len(englishStopwords), "]λέξεις.")
+
+    greekStopwords = nltk.corpus.stopwords.words('greek')
+    # print(greekStopwords)
+    # print ("Το Ελληνικό αλφάβητο αποτελείται από ->[", len(greekStopwords), "]λέξεις.")
+    # 
+    # print (cleanText(tokenizedList64, "english"))
+
+    print("\n================(8)================\n")
+
+    text2First200w = []
+    for i in range(200):
+        text2First200w.append(text2[i])
+
+    print(len(text2First200w))
+    print(len(cleanText(text2First200w, "english")))
+
+    
+
+
+    return 0
 
 if __name__ == "__main__":
     main()
