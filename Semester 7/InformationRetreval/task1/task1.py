@@ -1,11 +1,9 @@
 from nltk.book import *
 import nltk.tokenize
 import string
-# import gc
+import gc
 
-nltk.download('wordnet')
-nltk.download('stopwords')
-
+# -----------------------------------------------
 
 class WORD_STATS:        #? Creating an object in order to return two attributes at once
     wordCounter = 0
@@ -20,6 +18,7 @@ class WORD_STATS:        #? Creating an object in order to return two attributes
 def lexicalRichness(text):
         return (len(set(text)) / len(text))
 
+# -----------------------------------------------
 
 def calculateWordAppearance(text, word):
     dictionary = len(text)
@@ -28,6 +27,7 @@ def calculateWordAppearance(text, word):
     L1 = WORD_STATS(wordCounter, percentageFound)
     return L1 #? Creating an object in order to return two attributes at once
 
+# -----------------------------------------------
 
 def cleanText (tokenList, language):
     
@@ -41,6 +41,7 @@ def cleanText (tokenList, language):
 # -----------------------------------------------
 
 def main():
+    
 #! Task 1)
     print("\n================(i)================\n")
     print("Λεξικός πλούτος του κειμένου 'Monty Python and the Holy Grail' είναι -> ", lexicalRichness(text6))

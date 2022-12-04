@@ -11,6 +11,12 @@ import gc
 
 # -----------------------------------------------
 
+def UnionList(lst1, lst2):
+    union_list = list(set(lst1) | set(lst2))        #* Union of 2 lists using sets
+    return union_list
+
+# -----------------------------------------------
+
 def cleanText (tokenList, language):
     
     stopwords = nltk.corpus.stopwords.words(language)
@@ -20,11 +26,15 @@ def cleanText (tokenList, language):
             cleanedTokens.append(token)
     return cleanedTokens
 
+# -----------------------------------------------
+
 def cleanTextSet (tokenList, language):
     
     stopwords = nltk.corpus.stopwords.words(language)
     cleanedtokenList = {i for i in tokenList if not i in stopwords and i not in string.punctuation} 
     return cleanedtokenList
+
+# -----------------------------------------------
 
 def mostCommon3(text):
     
@@ -37,34 +47,36 @@ def mostCommon3(text):
     #! Πως θα τα εμφανίσω σε posting list??
     print(fdistText.most_common(3))
     
+# -----------------------------------------------
+    
 def SentenceCos(sent_x, sent_y):
         
     tokenized_sent_x = nltk.word_tokenize(sent_x) 
     tokenized_sent_y = nltk.word_tokenize(sent_y)
     
-    cleanSent_x = cleanTextSet(tokenized_sent_x, "english")
-    cleanSent_y = cleanTextSet(tokenized_sent_y, "english")
+    cleanSent_x = cleanText(tokenized_sent_x, "english")
+    cleanSent_y = cleanText(tokenized_sent_y, "english")
     
     binaryVec_X = []
     binaryVec_Y = []
+    final = 0
     
-    Union_Vec = cleanSent_x.union(cleanSent_y) 
-    for i in Union_Vec:
+    allTokens = UnionList(cleanSent_x, cleanSent_y) 
+    for i in allTokens:
         if i in cleanSent_x:
-            binaryVec_X.append(1) # create a vector
+            binaryVec_X.append(1)   #* Initialize binary Vector X
         else: 
             binaryVec_X.append(0)
         if i in cleanSent_y:
-            binaryVec_Y.append(1)
+            binaryVec_Y.append(1)   #* Initialize binary Vector Y
         else:
             binaryVec_Y.append(0)
-    final = 0
     
-    for i in range(len(Union_Vec)):
-        final += binaryVec_X[i] * binaryVec_X[i]
+    for i in range(len(allTokens)):
+        final += binaryVec_X[i] * binaryVec_Y[i]    #? If the word is contained in both texts final variable increments by 1
         
-    Output = final / float((sum(binaryVec_X) * sum(binaryVec_X)) ** 0.5)
-    print("The Output similarity of the two Text is: ", Output)
+    cosSimilarity = final / float((sum(binaryVec_X) * sum(binaryVec_Y)) ** 0.5)
+    print("The cos similarity between the two sentences is: ", cosSimilarity)
     
 # -----------------------------------------------
 
@@ -88,8 +100,8 @@ def main():
     split_onehot_vector1 = np.zeros((split_tokens1_len, split_vocabulary1_size), int)     #* Onehot vector initialization with '0'
     for i, word in enumerate(split_sentence1):
         split_onehot_vector1 [i, split_vocabulary1.index(word)] = 1      #* Changing 0 into 1 if that word is in the correct index
-    # print (' '.join(split_vocabulary1))
-    # print (split_onehot_vector1)
+    print (' '.join(split_vocabulary1))
+    print (split_onehot_vector1)
     
     print("\n---------------[ Onehot-Vector 1 with ntlk.word_tokenize() ]---------------\n")
     
@@ -104,8 +116,8 @@ def main():
     tokenize_onehot_vector1 = np.zeros((tokenize_tokens1_len, tokenize_vocabulary1_size), int)    
     for i, word in enumerate(tokenize_sentence1):
         tokenize_onehot_vector1 [i, tokenize_vocabulary1.index(word)] = 1   
-    # print (' '.join(tokenize_vocabulary1))
-    # print (tokenize_onehot_vector1)
+    print (' '.join(tokenize_vocabulary1))
+    print (tokenize_onehot_vector1)
     
     print("\n================(1.2)================\n")
     
@@ -184,8 +196,8 @@ def main():
     # print (dataFrame1)
     
     # dataFrame1 = dataFrame1.T
-    # print (dataFrame1.sentence2.dot(dataFrame1.sentence2))  #? Num of the same words sentence2 has with sentence2
-    # print (dataFrame1.sentence2.dot(dataFrame1.sentence3))  #?Num of the same words sentence2 has with sentence3
+    # print (dataFrame1.sentence2.dot(dataFrame1.sentence2))  #? Num of the same words sentence2 has with itself
+    # print (dataFrame1.sentence2.dot(dataFrame1.sentence3))  #? Num of the same words sentence2 has with sentence3
     # print (dataFrame1.sentence4.dot(dataFrame1.sentence4))
     # print (dataFrame1.sentence5.dot(dataFrame1.sentence5))
 
@@ -201,25 +213,38 @@ def main():
     
     
     #! Task 4)
-    print("\n================(4)================\n")
+    print("\n================(4)================\n")    #! Πως θα τα εμφανίσω σε posting list??
     
     # mostCommon3(text4)
     # mostCommon3(text7)
-    
-    
+
+
+
     #! Task 5)
-    print("\n================(5)================\n")
+    print("\n================(5)================\n")         #? Ειναι καλος αυτος ο τρόπος;
     
     # print(" ".join(text4[620:660]))
     # print(" ".join(text7[570:660]))
-    
-    text4Sentence = "These reflections, arising out of the present crisis, have forced themselves too strongly on my mind to be suppressed."
-    text7Sentence = "More common chrysotile fibers are curly and are more easily rejected *-1 by the body, Dr. Mossman explained 0 *T*-2."
-    SentenceCos(text4Sentence, text7Sentence)
-    
 
+    text4Sentence = "These reflections, arising out of the present crisis, have forced themselves too strongly on my mind to be suppressed."
+    text7Sentence = "reflections More common chrysotile fibers are curly and are more easily rejected *-1 by the body, Dr. Mossman explained 0 *T*-2."
+    # SentenceCos(text4Sentence, text7Sentence)
+
+    #! Task 6)
+    print("\n================(6)================\n")     #! Γινεται να το κανω σε πολλα αρχεια λογω μνημης
+
+    allText4 = " ".join(text4[:])
+    allText7 = " ".join(text7[:])
+    # SentenceCos(allText4, allText4)
     
     
+    
+    
+    
+    
+    
+    #! Task 7)
+    print("\n================(7)================\n")
     
     
     
