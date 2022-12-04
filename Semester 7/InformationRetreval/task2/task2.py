@@ -230,26 +230,13 @@ def main():
     text7Sentence = "reflections More common chrysotile fibers are curly and are more easily rejected *-1 by the body, Dr. Mossman explained 0 *T*-2."
     # SentenceCos(text4Sentence, text7Sentence)
 
+
     #! Task 6)
     print("\n================(6)================\n")     #! Γινεται να το κανω σε πολλα αρχεια λογω μνημης
 
     allText4 = " ".join(text4[:])
     allText7 = " ".join(text7[:])
     # SentenceCos(allText4, allText4)
-    
-    
-    
-    
-    
-    
-    
-    #! Task 7)
-    print("\n================(7)================\n")
-    
-    
-    
-    
-    
     
     return 0
 if __name__ == "__main__":
