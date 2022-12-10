@@ -290,6 +290,5 @@ def main():
     SentenceCos(allText4, allText7)
     
     return 0
-
 if __name__ == "__main__":
     main()
