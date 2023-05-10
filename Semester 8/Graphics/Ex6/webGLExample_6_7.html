@@ -9,6 +9,9 @@
 attribute vec4 aVertexPosition; 
 attribute vec4 aVertexColor; 
 uniform mat4 uModelTransform; 
+// new
+uniform mat4 uPerspectiveViewTransform;
+
 // ΒΗΜΑ.0.1 Δηλώστε ένα νέο έξτρα uniform (όπως το ακριβώς προηγούμενο) με όνομα uPerspectiveViewTransform 
 // που θα υποδεχθεί τον πίνακα μετασχηματισμού προοπτικής/κάμερας (Perspective/View)
 
@@ -17,7 +20,9 @@ void main() {
 // ΒΗΜΑ.0.2 Το νέο uniform uPerspectiveViewTransform συμμετέχει στον παρακάτω πολλαπλασιασμό για τη 
 // θέση της κάθε κορυφής ως πρώτο στο γινόμενο (αφού θέλουμε να εφαρμοστεί μετά από πιθανές 
 // μετακινήσεις, δημιουργία αντιγράφων κλπ. που περιέχονται στο uniform uModelTransform)
-	gl_Position =  uModelTransform * aVertexPosition; 
+
+	// new 
+	gl_Position = uPerspectiveViewTransform * uModelTransform * aVertexPosition; 
 	vColor = aVertexColor;
 } 
 </script>
@@ -38,6 +43,8 @@ var shadersProgram;
 var vertexPositionAttributePointer; 
 var vertexColorAttributePointer;
 var modelUniformPointer; 
+// new
+var perspectiveViewUniformPointer;
 
 // ΒΗΜΑ.0.3. Δηλώστε μία νέα global μεταβλητή με όνομα perspectiveViewUniformPointer 
 // για την αποθήκευση της διεύθυνσης του νέου uniform 
@@ -45,6 +52,10 @@ var modelUniformPointer;
 var vertexBuffer;
 var colorBuffer; 
 var indexBuffer;
+//new
+var floorVertexBuffer;
+var floorColorBuffer;
+var floorIndexBuffer;
 
 // ΒΗΜΑ.1. Προσθέστε τρεις νέους buffers: (α) για τις κορυφές του πατώματος, (β) για τα χρώματα των κορυφών του πατώματος και (γ) για τους δείκτες (indices) των κορυφών του πατώματος
 // Προτεινόμενα ονόματα: floorVBuffer, floorCBuffer, floorIBuffer
@@ -55,8 +66,13 @@ var totalAngle = -1.0; // To totalAngle θα αλλάξει ρόλο: θα χρ�
 // Ο πίνακας περιστροφής των αντικειμένων δεν χρησιμοποιείται πια (αφέθηκε εδώ ως δείγμα δήλωσης πίνακα για τις παρακάτω δηλώσεις πινάκων)
 
 // ΒΗΜΑ.4. ΠΡΟΣΘΕΣΤΕ ΕΔΩ ΤΗ ΔΗΛΩΣΗ ΜΙΑΣ GLOBAL ΜΕΤΑΒΛΗΤΗΣ totalZ ΓΙΑ ΤΟ ΣΥΝΟΛΙΚΟ ΥΨΟΣ Z ΤΗΣ ΚΑΜΕΡΑΣ ΚΑΙ ΑΡΧΙΚΟΠΟΙΗΣΤΕ ΤΗ ΣΕ 2
+var totalZ = 2;
 
 // ΒΗΜΑ.0.4 Δηλώστε τρεις νέους πίνακες για να υποδεχθούν τον πίνακα προοπτικής perspectiveMatrix, τον πίνακα τοποθέτησης της κάμερας viewMatrix και το γινόμενό τους pvMatrix
+// new
+var perspectiveMatrix = new Float32Array(16);
+var viewMatrix = new Float32Array(16);
+var pvMatrix = new Float32Array(16);
 
 
 var requestID = 0; 
@@ -106,6 +122,9 @@ function initShaders() {
 	// ΒΗΜΑ.0.5 Αποθηκεύστε στο σχετικό pointer (η global μεταβλητή) τη διεύθυνση του νέου uniform uPerspectiveViewTransform 
 	// (όπως η ακριβώς γίνεται στην προηγούμενη εντολή για το άλλο uniform με τον άλλο pointer
 
+	gl.enableVertexAttribArray(perspectiveViewUniformPointer);
+	perspectiveViewUniformPointer = gl.getUniformLocation(shadersProgram, "uPerspectiveViewTransform");
+
 }
 
 function initBuffers() {
@@ -153,12 +172,61 @@ function initBuffers() {
 	// Θεωρήστε και τοποθετήστε το πάτωμα παράλληλο στο επίπεδο xy και στο κέντρο του,
 	// με διαστάσεις 2x2 (δηλαδή από -1 ως 1 σε x και y) και με z=0 για όλες τις κορυφές του
 	// Χρησιμοποιήστε αποχρώσεις του γκρι για τις κορυφές του
+
+	//new 
+
+	// Κορυφές πατώματος
+	var floorTetraVertices = new Float32Array([
+			-1.0, 1.0, 0.0, 1.0,  // Κορυφή Α	//ALLAGH  kORYFH 0 ftiaxnw koryfes kai tis emfanizw
+			-1.0, 1.0, 0.0, 1.0, // Κορυφή Β
+			-1.0, 1.0, 0.0, 1.0, // Κορυφή Γ
+			-1.0, 1.0, 0.0, 1.0   // Κορυφή Δ
+				]);
+	floorVertexBuffer = gl.createBuffer(); 
+	gl.bindBuffer(gl.ARRAY_BUFFER, floorVertexBuffer); 
+	gl.bufferData(gl.ARRAY_BUFFER, floorTetraVertices,	gl.STATIC_DRAW); 
+	floorVertexBuffer.itemSize = 4;  
+	floorVertexBuffer.itemCount = 4;
+
+
+// Χρώματα πατώματος
+// var floorTetraColors = new Float32Array([
+// 				0.9, 0.9, 0.9, 1.0, // Χρώμα κορυφής Α: κόκκινο
+// 				0.9, 0.9, 0.9, 1.0, // Χρώμα κορυφής Β: πράσινο
+// 				0.9, 0.9, 0.9, 1.0, // Χρώμα κορυφής Γ: μπλε
+// 				0.9, 0.9, 0.9, 1.0  // Χρώμα κορυφής Δ: κίτρινο
+// 				]);
+
+var floorTetraColors = new Float32Array([
+				1.0, 0.0, 1.0, 1.0, // Χρώμα κορυφής Α: κόκκινο
+				1.0, 0.0, 1.0, 1.0, // Χρώμα κορυφής Β: πράσινο
+				1.0, 0.0, 1.0, 1.0, // Χρώμα κορυφής Γ: μπλε
+				1.0, 0.0, 1.0, 1.0  // Χρώμα κορυφής Δ: κίτρινο
+				]);
+
+	floorColorBuffer = gl.createBuffer(); 
+	gl.bindBuffer(gl.ARRAY_BUFFER, floorColorBuffer); 
+	gl.bufferData(gl.ARRAY_BUFFER, floorTetraColors, gl.STATIC_DRAW); 
+	floorColorBuffer.itemSize = 4;  
+	floorColorBuffer.itemCount = 4;
+
+	var floorIndexMatrix = new Uint16Array([
+				0,1,2,  // ΑΒΓ
+				0,2,3,  // ΑΓΔ
+		
+				]);
+	floorIndexBuffer = gl.createBuffer(); 
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorIndexBuffer); 
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, floorIndexMatrix, gl.STATIC_DRAW);
+	indexBuffer.itemCount = 6;
+
 }
 
 function drawScene() { 
 // ***---*** Αρχή δημιουργίας πίνακα προοπτικής/κάμερας και ταΐσματος στο νέο uniform 
 	
 	//  ΒΗΜΑ.0.6 Αρχικοποιείται σε μοναδιαίο πίνακα o pvMatrix για να "ταϊστεί" στοιχειωδώς το νέο uniform (χρησιμοποιήστε την identity της βιβλιοθήκης)
+	glMatrix.mat4.identity(pvMatrix);
 	
 	
 	//	ΒΗΜΑ.7. ΠΡΟΣΘΕΣΤΕ ΕΔΩ ΤΙΣ ΑΠΑΡΑΙΤΗΤΕΣ ΕΝΤΟΛΕΣ ΩΣΤΕ:
@@ -190,6 +258,8 @@ function drawScene() {
 	// (μετά την ολοκλήρωση του ΒΗΜΑΤΟΣ.7 ο πίνακας θα περιέχει σε κάθε εκτέλεση της redraw τη νέα θέση της 
 	// κάμερας και την αντίστοιχη προοπτική)
 	// Αντίστοιχη με τη 2η εντολή του 2ου πακέτου εργασιών παρακάτω (μέσα στο for)
+	//new
+	gl.uniformMatrix4fv(perspectiveViewUniformPointer, false, pvMatrix);
 	
 	
 // ***---*** Τέλος δημιουργίας πίνακα προοπτικής/κάμερας και ταΐσματος στο νέο uniform 
@@ -212,7 +282,10 @@ function drawScene() {
 	
 	// ΒΗΜΑ.6. ΠΡΟΣΘΕΣΤΕ ΤΙΣ ΕΝΤΟΛΕΣ ΓΙΑ ΝΑ "ΨΑΡΕΨΕΤΕ" ΤΗΝ ΤΙΜΗ ΤΟΥ ΒΗΜΑΤΟΣ ΚΑΤΑ z ΤΗΣ ΚΑΜΕΡΑΣ ΑΠΟ ΤΟ ΑΝΤΙΣΤΟΙΧΟ TEXTBOX ΚΑΙ ΝΑ ΥΠΟΛΟΓΙΣΕΤΕ ΤΟ ΣΥΝΟΛΙΚΟ z 
 	// (ΠΑΡΟΜΟΙΑ ΜΕ ΤΟΝ ΥΠΟΛΟΓΙΣΜΟ ΤΟΥ totalAngle ΑΚΡΙΒΩΣ ΠΑΡΑΠΑΝΩ ΧΩΡΙΣ ΒΕΒΑΙΑ ΤΗ ΜΕΤΑΤΡΟΠΗ ΣΕ ΑΚΤΙΝΙΑ)
-	
+
+	var txtCamHeight = document.getElementById("camHeightTxt")
+	//here
+	var numCamHeight = parseFloat(txtStepAngle);
 	
 	// Μόνο μετακίνηση για δημιουργία αντιγράφου/τοποθέτηση του αντικειμένου: 
 	// δεν θα περιστρέφεται ούτε θα κλιμακώνεται
@@ -231,14 +304,29 @@ function drawScene() {
 	
 	// ΒΗΜΑ.3. ΠΡΟΣΘΕΣΤΕ ΕΔΩ ΤΟΝ ΚΩΔΙΚΑ ΓΙΑ ΝΑ ΕΝΕΡΓΟΠΟΙΗΘΟΥΝ ΟΙ BUFFERS ΤΟΥ "ΠΑΤΩΜΑΤΟΣ" ΚΑΙ ΝΑ ΣΧΕΔΙΑΣΤΕΙ ΤΟ ΠΑΤΩΜΑ. ΑΝΑΛΥΤΙΚΑ:
 	
-	//  ΒΗΜΑ 3.1 ΔΕΙΤΕ ΤΟΝ ΚΩΔΙΚΑ "ΑΡΧΗ-ΤΕΛΟΣ 1ων ΕΡΓΑΣΙΩΝ ΤΕΤΡΑΕΔΡΟΥ" ΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗ ΚΑΙ ΑΝΤΙΣΤΟΙΧΙΣΗ ΤΩΝ ATTRIBUTES ΤΟΥ VERTEX SHADER ME ΤΟΥΣ ΚΑΤΑΛΛΗΛΟΥΣ BUFFERS ΤΗΣ ΠΥΡΑΜΙΔΑΣ" ΠΑΡΑΠΑΝΩ, ΒΑΛΤΕ ΕΔΩ ΤΙΣ ΑΝΤΙΣΤΟΙΧΕΣ ΕΝΤΟΛΕΣ
+	//  ΒΗΜΑ 3.1 ΔΕΙΤΕ ΤΟΝ ΚΩΔΙΚΑ "ΑΡΧΗ-ΤΕΛΟΣ 1ων ΕΡΓΑΣΙΩΝ ΤΕΤΡΑΕΔΡΟΥ" 
+	// ΓΙΑ ΕΝΕΡΓΟΠΟΙΗΣΗ ΚΑΙ ΑΝΤΙΣΤΟΙΧΙΣΗ ΤΩΝ ATTRIBUTES ΤΟΥ VERTEX SHADER ME ΤΟΥΣ ΚΑΤΑΛΛΗΛΟΥΣ BUFFERS ΤΗΣ ΠΥΡΑΜΙΔΑΣ" ΠΑΡΑΠΑΝΩ, ΒΑΛΤΕ ΕΔΩ ΤΙΣ ΑΝΤΙΣΤΟΙΧΕΣ ΕΝΤΟΛΕΣ
+	//new 
+	gl.bindBuffer(gl.ARRAY_BUFFER, floorVertexBuffer); 
+	gl.vertexAttribPointer(vertexPositionAttributePointer, vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ARRAY_BUFFER, floorColorBuffer); 
+	gl.vertexAttribPointer(vertexColorAttributePointer, colorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorIndexBuffer);
 	
 	
-	// 	ΒΗΜΑ 3.2 ...ΚΑΙ ΤΟΝ ΚΩΔΙΚΑ "ΑΡΧΗ-ΤΕΛΟΣ 2ων ΕΡΓΑΣΙΩΝ ΤΕΤΡΑΕΔΡΟΥ" ΓΙΑ ΔΗΜΙΟΥΡΓΙΑ/ΕΝΗΜΕΡΩΣΗ ΠΙΝΑΚΑ ΜΕΤΑΣΧΗΜΑΤΙΣΜΟΥ, ΤΑΪΣΜΑ ΣΤΟ ΑΝΤΙΣΤΟΙΧΟ uniform ΚΑΙ ΣΧΕΔΙΑΣΗ"
+	// 	ΒΗΜΑ 3.2 ...ΚΑΙ ΤΟΝ ΚΩΔΙΚΑ "ΑΡΧΗ-ΤΕΛΟΣ 2ων ΕΡΓΑΣΙΩΝ ΤΕΤΡΑΕΔΡΟΥ" 
+	// ΓΙΑ ΔΗΜΙΟΥΡΓΙΑ/ΕΝΗΜΕΡΩΣΗ ΠΙΝΑΚΑ ΜΕΤΑΣΧΗΜΑΤΙΣΜΟΥ, ΤΑΪΣΜΑ ΣΤΟ ΑΝΤΙΣΤΟΙΧΟ uniform ΚΑΙ ΣΧΕΔΙΑΣΗ"
+
 	//  ΔΕ ΘΑ ΧΡΕΙΑΣΤΕΙ for ΓΙΑ ΤΟ ΠΑΤΩΜΑ, ΟΥΤΕ ΚΑΠΟΙΑ ΜΕΤΑΚΙΝΗΣΗ: Ο ΠΙΝΑΚΑΣ ΜΕΤΑΣΧΗΜΑΤΙΣΜΟΥ ΘΑ ΕΙΝΑΙ ΜΟΝΑΔΙΑΙΟΣ
 	//  ΟΜΩΣ ΧΡΕΙΑΖΕΤΑΙ ΠΙΝΑΚΑΣ ΜΕΤΑΣΧΗΜΑΤΙΣΜΟΥ (ΜΕΤΑΚΙΝΗΣΗΣ κλπ.), ΠΑΡΟΤΙ ΘΑ ΕΙΝΑΙ ΜΟΝΑΔΙΑΙΟΣ,
 	// ΓΙΑΤΙ ΤΟΝ ΕΧΟΥΜΕ "ΤΑΞΕΙ" ΣΤΟ VERTEX SHADER ΩΣ UNIFORM (ΤΟ uTransformMatrix) ΠΟΥ ΠΕΡΙΜΕΝΕΙ "ΤΑΪΣΜΑ". ΒΑΛΤΕ ΕΔΩ ΤΙΣ ΑΝΤΙΣΤΟΙΧΕΣ ΕΝΤΟΛΕΣ
 	
+	// new 
+	glMatrix.mat4.fromTranslation(pvMatrix,[0,0,0]);
+	gl.uniformMatrix4fv(perspectiveViewUniformPointer, false, pvMatrix); 
+	gl.drawElements(gl.TRIANGLES,floorIndexBuffer.itemCount,gl.UNSIGNED_SHORT, 0);
 	
 }
  
@@ -281,6 +369,7 @@ function stopAnimation() {
 <p>
 Βήμα γωνίας περιστροφής της κάμερας:<input type="text" id="stepAngleTxt" value="1" autocomplete="off"> 
 <!-- ΒΗΜΑ.5. ΠΡΟΣΘΕΣΤΕ ΕΔΩ ΕΝΑ ΤΕΧΤ ΒΟΧ ΓΙΑ ΤΟ ΒΗΜΑ ΤΟΥ ΥΨΟΥΣ ΤΗΣ ΚΑΜΕΡΑΣ (ΠΡΟΤΕΙΝΟΜΕΝΟ VALUE 0.01)--->
+Βήμα ύψους της κάμερας:<input type="text" id="camHeightTxt" value="0.1" autocomplete="off">
 
 <BR>
 <button id="startButton" onclick="startAnimation()">Ξεκίνα!</button>
