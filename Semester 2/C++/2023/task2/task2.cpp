@@ -103,18 +103,18 @@ int main (int argc, char **argv){
     Student *s1 = new Student ("19390104", "VasilhsKoumanis",6); 
     (*s1).print(std::cout); // method that shows the values of the object in whatever channel
     // setter example
-    std::cout << "setter:" << std::endl;
+    std::cout << "κλήση του setter:\n" << std::endl;
     (*s1).setAM("64646464");
 
     // Αντικείμενο με προκαθορισμένο εξάμηνο `1`.
     Student *s2 = new Student ("42012345", "GiwrgosChronopoulos");
     (*s2).print(std::cout);
     (*s2).incrementSemester(); 
-    std::cout << "Η τιμή του 'εξαμήνου' \nγια το αντικείμενο 's2' άλλαξε σε: " << (*s2).getSemester() << std::endl;
+    std::cout << "Η τιμή του 'εξαμήνου' για το αντικείμενο 's2' άλλαξε σε: " << (*s2).getSemester() << std::endl;
 
     //After using the setters the duplicate will take the new values. Υστερα από τη χρήση των setter 
     Student *duplicate1 = s1;   // Calls the copy constructor and makes a duplicare of s1 
-    std::cout << "Πρόκειται για ένα αντίγραφο του s1:" <<std::endl;
+    std::cout << "\nΔημιουργήθηκέ ένα αντίγραφο του s1 με τη νεα τιμή στο ΑΜ και +10 στο εξάμηνο:" <<std::endl;
     (*duplicate1).semesterAddition(10);
     (*duplicate1).print(std::cout);
 
