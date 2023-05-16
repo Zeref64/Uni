@@ -1,6 +1,63 @@
 #include <iostream>
 #include <cstring>
 
+class Course {
+
+    private:
+        std::string courseCode; 
+        std::string courseName;
+        unsigned int courseHours;
+        std::string courseSemester;
+
+    public:
+        Course();
+        Course(std::string code, std::string name, unsigned int hours ,std::string semester);
+        Course(const Course &sourceObject);
+
+        ~Course();
+
+        std::string getCourseCode();
+        std::string getCourseName();
+        unsigned int getCourseHours();
+        std::string getCourseSemester();
+
+        void setCourseCode(std::string code);
+        void setCourseName(std::string name);
+        void setCourseHours(unsigned int hours);
+        void setCourseSemester(std::string semester);
+
+        //* void operator = (const Course &courseObject);
+
+        void printCourse (std::ostream &ostream); 
+};
+
+Course::Course() {}
+        Course::Course(std::string code, std::string name, unsigned int hours ,std::string semester) : courseCode(code), courseName(name), courseHours(hours) ,courseSemester(semester) {}
+        Course::Course(const Course &sourceObject) : courseCode(sourceObject.courseCode), courseName(sourceObject.courseName), courseHours(sourceObject.courseHours) ,courseSemester(courseSemester) {}
+
+        Course::~Course() {}
+
+        std::string Course::getCourseCode() { return (*this).courseCode; }
+        std::string Course::getCourseName() { return (*this).courseName; }
+        unsigned int Course::getCourseHours() { return (*this).courseHours; }
+        std::string Course::getCourseSemester() { return (*this).courseSemester; }
+
+        void Course::setCourseCode(std::string code) { (*this).courseCode = code;}
+        void Course::setCourseName(std::string name) { (*this).courseName = name; }
+        void Course::setCourseHours(unsigned int hours) { (*this).courseHours = hours; }
+        void Course::setCourseSemester(std::string semester) { (*this).courseSemester = semester; }
+
+        //* void Course::operator = (const Course &courseObject) {
+        //     (*this).courseCode = courseObject.courseCode;
+        //     (*this).courseName = courseObject.courseName;
+        //     (*this).courseSemester = courseObject.courseSemester;
+        // }
+
+        void Course::printCourse (std::ostream &ostream) {
+    ostream << "Κωδικός μαθήματος: " << (*this).courseCode << "\tΌνομα μαθήματος: " << (*this).courseName << "\tΕξάμηνο μαθήματος: " << (*this).courseSemester << std::endl; }
+
+//! ---
+
 class Student {
 
     private:
@@ -29,6 +86,17 @@ class Student {
         void semesterSubtraction(int number); //Μείωση εξαμήνου κατά `number`
         void print (std::ostream &ostream);  //Εκτύπωση αντικειμένου σε όλα τα κανάλια
 
+        Student &operator+=(unsigned int semester);
+
+        Student& operator=(const Student& otherObject);
+
+        bool operator==(const Student& otherObject) const;
+        bool operator!=(const Student& otherObject) const;
+        bool operator<(const Student& otherObject) const;
+        bool operator<=(const Student& otherObject) const;
+        bool operator>(const Student& otherObject) const;
+        bool operator>=(const Student& otherObject) const;
+
         }; 
 
     Student::Student() {}
@@ -55,11 +123,8 @@ class Student {
         (*this).semester = Student_object.semester;
     }
 
-    Student::~Student() { 
-    delete[] (*this).AM;     //Επειδή έχει κληθεί new κλήνεται το delete στον destructor
-    }
-
-
+    Student::~Student() { delete[] (*this).AM; }     //Επειδή έχει κληθεί new κλήνεται το delete στον destructor}
+//
     //Getters
         const char* Student::getAM() { return (*this).AM; }
         std::string Student::getName() { return (*this).Name; }
@@ -72,7 +137,6 @@ class Student {
         (*this).AM = new char(strlen(AM) + 1);
         strcpy ((*this).AM, AM);
     }
-
     void Student::setName(std::string Name) { (*this).Name = Name; } 
     void Student::setSemester(unsigned int semester) { (*this).semester = semester; }
 
@@ -93,6 +157,38 @@ class Student {
         ostream << "AM Φοιτητή: " << (*this).AM << "\tΟνοματεπώνημο: " <<(*this).Name << "\tΕξάμηνο: " << (*this).semester << std::endl;
 } 
 
+Student &Student::operator+=(unsigned int semester) {
+    (*this).semester += semester;
+    return *this;
+}
+
+Student& Student::operator=(const Student& otherObject) {
+    if (this != &otherObject) { 
+
+        delete[] AM;
+
+        AM = new char[strlen(otherObject.AM) + 1];
+        strcpy(AM, otherObject.AM);
+
+        Name = otherObject.Name;
+        semester = otherObject.semester;
+    }
+    return *this;
+}
+
+bool Student::operator==(const Student& otherObject) const {return (*this).semester == otherObject.semester;}
+
+bool Student::operator!=(const Student& otherObject) const {return (*this).semester != otherObject.semester;}
+
+bool Student::operator<(const Student& otherObject) const {return (*this).semester < otherObject.semester;}
+
+bool Student::operator<=(const Student& otherObject) const {return (*this).semester <= otherObject.semester;}
+
+bool Student::operator>(const Student& otherObject) const {return (*this).semester > otherObject.semester;}
+
+bool Student::operator>=(const Student& otherObject) const {return (*this).semester >= otherObject.semester;}
+
+//! --
 
 int main (int argc, char **argv){
 
@@ -117,6 +213,7 @@ int main (int argc, char **argv){
     std::cout << "\nΔημιουργήθηκέ ένα αντίγραφο του s1 με τη νεα τιμή στο ΑΜ και +10 στο εξάμηνο:" <<std::endl;
     (*duplicate1).semesterAddition(10);
     (*duplicate1).print(std::cout);
+
 
     return 0;
 }
