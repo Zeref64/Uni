@@ -14,7 +14,6 @@ class Student {
         std::vector <std::pair<Course*,float>> passedCourses;
 
     public:
-        // Constructor κενού αντικειμένου
         Student();      
         // Απλός Constructor
         Student(const char *AM, std::string Name, unsigned int semester);
@@ -22,10 +21,8 @@ class Student {
         // Constructor με προκαθορισμένη τιμή `1` για το πεδίο εξάμηνο
         Student(const char *AM, std::string Name);   
 
-        // Copy Constructor 
         Student(const Student  &studentObject);
 
-        // Destructor
         ~Student();
 
         //Getters
@@ -60,8 +57,7 @@ class Student {
         //* Υπερφόρτωση Τελεστών
         // Δήλωση νέου μαθήματος στη selectedCourses
         void operator += (const Course* newCourse);
-        //Παρόμοιο με τον Copy Constructor
-        Student& operator = (const Student &studentObject);
+        Student& operator = (const Student &studentObject);      // Παρόμοιο με τον Copy Constructor    
         // Συγκρίσεις εξαμήνων ανάμεσα σε αντικείμενα Student
         bool operator == (const Student& studentObject) const;
         bool operator != (const Student& studentObject) const;
