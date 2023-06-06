@@ -4,7 +4,7 @@
 
 Student::Student() {}
 
-Student::Student(const char *AM, std::string Name, unsigned int semester) {
+Student::Student(const char* AM, std::string Name, unsigned int semester) {
     (*this).AM = new char(strlen (AM) + 1);
     strcpy ((*this).AM, AM);
     (*this).Name = Name;    
@@ -13,7 +13,7 @@ Student::Student(const char *AM, std::string Name, unsigned int semester) {
 }
 
 // Constructor με προκαθορισμένη τιμή `1` για το πεδίο εξάμηνο
-Student::Student(const char *AM, std::string Name) {
+Student::Student(const char* AM, std::string Name) {
     //Δυναμική δέσμευση για τον AM και αντιγραφή του με strcpy
     (*this).AM = new char(strlen (AM) + 1);             
     strcpy ((*this).AM, AM);
@@ -55,7 +55,7 @@ float Student::getCourseAverage() const {
 
 // Setters
 //* Αφαίρεση του προηγούμενου pointer και προσθήκη νέου
-void Student::setAM(const char *AM) { 
+void Student::setAM(const char* AM) { 
     delete[] (*this).AM;    
     (*this).AM = new char[strlen (AM) + 1];
     strcpy ((*this).AM, AM);
@@ -70,13 +70,13 @@ void Student::setPassedCoursesList(std::vector<std::pair <Course*, float>> newPa
             (*this).passedCourses.push_back(newPassedCoursesList[i]);
         }
         else {
-            std::cout << "wrong grade value" << std::endl;
+            std::cout << "Λανθασμένη τιμή βααθμολογίας" << std::endl;
         }
     }
 } 
 
 // Αλλες Μέθοδοι
-void Student::incrementSemester () { ++(*this).semester; } //Προαύξηση του εξαμήνου
+void Student::incrementSemester () { ++(*this).semester; } // Προαύξηση του εξαμήνου
 // Αυξηση εξαμήνου κατά `1`
 void Student::semesterAddition (int number) { (*this).semester += number; }
 // Μείωση εξαμήνου κατά `number`

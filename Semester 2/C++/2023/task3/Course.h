@@ -16,7 +16,7 @@ class Course {
 
     public:
         Course();
-        Course(std::string code, std::string name,unsigned int courseHours,Semester semester);
+        Course(std::string code, std::string name, unsigned int courseHours, Semester semester);
         Course(const Course &sourceObject);
 
         ~Course();

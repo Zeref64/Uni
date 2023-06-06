@@ -71,7 +71,7 @@ std::ostream& operator << (std::ostream& ostream, const Student& studentObject) 
         ostream << "\tΔηλωμένο Μάθημα [" << i+1 << "]: " << studentObject.getSelectedCoursesList()[i]->getCourseCode() <<"\t"<< studentObject.getSelectedCoursesList()[i]->getCourseName() <<  std::endl; 
     }
 
-    ostream << "\n---Περασμένα μαθήματα & βαθμολογίες--- >>" << std::endl;
+    ostream << "\n---Περασμένα μαθήματα και αναλυτική βαθμολογία--- >>" << std::endl;
     for (int j = 0; j < studentObject.getPassedCoursesList().size(); j++) {
         ostream << "\tΠερασμένο Μάθημα [" << j+1 << "]: " << studentObject.getPassedCoursesList()[j].first->getCourseCode() <<"\t"<< studentObject.getPassedCoursesList()[j].first->getCourseName() << "\tΒαθμός Μαθήματος: " << studentObject.getPassedCoursesList()[j].second << std::endl;
     }

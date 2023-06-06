@@ -7,7 +7,7 @@
 class Student {
 
     private:
-        char *AM;
+        char* AM;
         std::string Name;
         unsigned int semester;
         std::vector <const Course*> selectedCourses;
@@ -16,17 +16,17 @@ class Student {
     public:
         Student();      
         // Απλός Constructor
-        Student(const char *AM, std::string Name, unsigned int semester);
+        Student(const char* AM, std::string Name, unsigned int semester);
 
         // Constructor με προκαθορισμένη τιμή `1` για το πεδίο εξάμηνο
-        Student(const char *AM, std::string Name);   
+        Student(const char* AM, std::string Name);   
 
         Student(const Student  &studentObject);
 
         ~Student();
 
         //Getters
-        const char *getAM() const ;
+        const char* getAM() const ;
         std::string getName() const;  
         unsigned int getSemester() const;
         //*new
@@ -35,7 +35,7 @@ class Student {
         float getCourseAverage() const;
 
         //Setters
-        void setAM(const char *AM);
+        void setAM(const char* AM);
         void setName(std::string Name);   
         void setSemester(unsigned int semester);
         //*new
