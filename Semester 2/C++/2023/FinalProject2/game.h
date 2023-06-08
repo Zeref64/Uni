@@ -1,3 +1,6 @@
+#ifndef GAME_H // Προστασία από errors του linker
+#define GAME_H
+
 #include <string>
 #include <vector>
 #include "player.h"
@@ -23,5 +26,8 @@ class Game {
 
         void initializeMap();
         void initializeGame();
+        void initializePlayers();
         void beginRound();
 };
+
+#endif

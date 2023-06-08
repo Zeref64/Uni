@@ -12,8 +12,10 @@ Game::Game() {}
 // Αρχικοποίηση του file path
 Game::Game(std::string filePath) : filePath(filePath) {
 
-    playerVector.push_back( new Player('X', COLOR_MAGENTA, -1) ); // TODO Color is not working properly it overrides the value
+    playerVector.push_back( new Player('X', COLOR_MAGENTA, -1) ); 
     playerVector.push_back( new LoukasP1());
+    // playerVector.push_back( new Player('C', COLOR_BLUE, -1) );
+    playerVector.push_back( new Player('D', COLOR_RED, -1) );
 
 }
 
@@ -22,6 +24,7 @@ Game::~Game() {
     if (!playerVector.empty()) {
         delete playerVector[0];
         delete playerVector[1];
+        delete playerVector[2];
     }
     //TODO More delete
 }
@@ -83,11 +86,15 @@ void Game::initializeMap() {
 void Game::initializeGame() {
 
     initializeMap();
-    // for (Player* player: playerVector) {
-    //     player->initializePlayerPositions(this->maxRow, this->maxColumn);
-    // }
-    playerVector[0]->initializePlayerPositions(this->maxRow, this->maxColumn);
-    playerVector[1]->initializePlayerPositions(this->maxRow, this->maxColumn);
+    initializePlayers();
+}
+
+
+void Game::initializePlayers() { 
+    for (int i = 0; i < playerVector.size(); i++) {
+        playerVector[i]->initializePlayerPositions(this->maxRow, this->maxColumn);
+        playerVector[i]->showPlayer(i+1);
+    }
 }
 
 void Game::beginRound() {

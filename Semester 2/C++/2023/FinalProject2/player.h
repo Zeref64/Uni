@@ -22,7 +22,7 @@ class Player {
         char getIdentifier();
         std::pair<int, int> getCurrentPosition();
 
-        void showPlayer();
+        void showPlayer(int colorID);
         void initializePlayerPositions(int rowLimit, int columnLimit);
         
     };

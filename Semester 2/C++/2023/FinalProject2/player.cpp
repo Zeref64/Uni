@@ -12,13 +12,18 @@ char Player::getIdentifier() {return this->identifier;}
 std::pair<int, int> Player::getCurrentPosition() {return this->currentPosition;}
 
 
-void Player::showPlayer() {
+void Player::showPlayer(int colorID) {
 
-    init_pair(1, this->foregroundColor, this->backgroundColor);
 
-    attron(COLOR_PAIR(1));
+    start_color();
+    use_default_colors(); 
+
+    init_pair(colorID, this->foregroundColor, this->backgroundColor);
+
+    attron(COLOR_PAIR(colorID));
     mvaddch(this->currentPosition.first, this->currentPosition.second, this->identifier);
-    attroff(COLOR_PAIR(1));
+    attroff(COLOR_PAIR(colorID));
+    
 } 
 
 //* Αρχοικοποιεί τους παίχτες σε τυχαία θέση εντός ορίων του χάρτη
@@ -37,10 +42,6 @@ void Player::initializePlayerPositions(int rowLimit, int columnLimit) {
         if (mvinch(currentX, currentY) == '.') {
 
             this->currentPosition = std::make_pair(currentX, currentY);
-
-            start_color();
-            use_default_colors(); 
-            showPlayer();
             break;
         }
         attempts++;

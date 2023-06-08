@@ -5,7 +5,7 @@
 #include "player.h"
 #include "LoukasP1.h"
 
-LoukasP1::LoukasP1() : Player('L', COLOR_MAGENTA, -1) {} 
+LoukasP1::LoukasP1() : Player('L', COLOR_GREEN, -1) {} 
 
 LoukasP1::~LoukasP1() {}
 
