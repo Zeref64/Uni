@@ -2,7 +2,7 @@
 #include "Course.h"
 
         Course::Course() {}
-        Course::Course(std::string code, std::string name,unsigned int hours, Semester semester) : courseCode(code), courseName(name),courseHours(hours), courseSemester(semester) {}
+        Course::Course(std::string code, std::string name,unsigned int hours, Semester semester) :  courseName(name),courseHours(hours), courseSemester(semester) {}
         Course::Course(const Course &sourceObject) : courseCode(sourceObject.courseCode), courseName(sourceObject.courseName),courseHours(sourceObject.courseHours), courseSemester(sourceObject.courseSemester) {}
 
         Course::~Course() {}

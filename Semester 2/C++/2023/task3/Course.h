@@ -1,3 +1,6 @@
+#ifndef COURSE_H
+#define COURSE_H
+
 #include <string>
 #include <cstring>
 
@@ -33,3 +36,5 @@ class Course {
 
         void printCourse (std::ostream &ostream); 
 };
+
+#endif
