@@ -34,13 +34,18 @@ void LoukasP1::getGemLocation(std::pair <int, int> gemLocation_) {
 }
 
 bool LoukasP1::action() {
+
+    int row, column = 0;
+    getmaxyx(stdscr, row, column);
+    
     char characterAbove, characterBelow, characterLeft, characterRight;         //* Αρχικοποιεί μεταβλητές που θα κρατούν τις γειτονικές θέσεις
     int input = getch();                                                           //? (Τρόπος σκέψης μου στο κάτω μέρος του αρχείου)
     
     switch (input) {
         case ESC:
             clear();
-            mvprintw(0, 2, "%s", "Τερματισμός Παιχνιδιού.");
+            mvprintw(0, 0, "%s", "Χαρακτήρας [ESC]!!\n Τερματισμός Παιχνιδιού κανένας Μάγος δεν βρήκε το πετράδι.");
+            mvprintw(row - 1 , 0, "[Εισάγετε οποιοδήποτε χαρακτήρα για τερματισμό]");
             getch();
             endwin();
             exit(0);
@@ -97,7 +102,7 @@ bool LoukasP1::action() {
             break;
     }
 
-    return false; // Return false if no condition is met
+    return false;
 }
 
 //? Τρόπος σκέψης: αρχικά έκανα τον έλεγχο με μια mvinch(currentPosition.X (first) + 1, currentPosition.Y (second)) == 'X' ωστόσο επειδή το αντικείμενο'Χ'

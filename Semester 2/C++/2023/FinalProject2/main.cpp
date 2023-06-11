@@ -10,16 +10,26 @@ int main(int argc, char** argv) {
 
     std::string studentInfo("Αντικειμενοστρεφής Προγραμματισμός Τελική εργασία εξαμήνου Θεωρίας 2022-23 Κόυμανης Βασίλειος - 19390104");
 
+    std::string gameStory = "Στο Μαγικό Εκπαιδευτικό Ίδρυμα (Μ.Ε.Ι.) Δυτικής Αττικής, "
+                                "στο οποίο φοιτούν μαθητευόμενοι μάγοι, κάθε χρόνο διοργανώνεται "
+                                "ένας αγώνας μεταξύ των δύο καλύτερων μαθητών. "
+                                "Με ευθύνη των καθηγητών του σχολείου, δημιουργείται ένας λαβύρινθος "
+                                "Ο λαβύρινθος δεν έχει έξοδο και για να βγει κάποιος από αυτόν "
+                                "πρέπει να βρει το μαγικό πετράδι τηλεμεταφοράς, "
+                                "το οποίο τοποθετείται στον λαβύρινθο για το σκοπό αυτό. "
+                                "Ο μαθητής ο οποίος θα αγγίξει πρώτος το πετράδι κερδίζει.\n"
+                                "Φέτος, στον αγώνα συμμετέχουν:\n"
+                                "Ο Μπάμπης Ποτερίδης (Μ) ο οποίος αγωνίζεται με την κόκκινη φορεσιά και"
+                                "O Λουκάς Μαλφόης (L) ο οποίος αγωνίζεται με πράσινη φορεσιά.";
+
     ncursesSetup();
 
     Game gameObject(argv[1]);
-    gameObject.startScreen(studentInfo);
+    gameObject.startScreen(studentInfo, gameStory);
     clear();
 
     gameObject.initializeGame();
     refresh();
-    // gameObject.beginRound();
-    // refresh();
 
     clear();
 
@@ -32,12 +42,9 @@ void ncursesSetup() {
     //* Αρχικοποίηση του ncurses
     setlocale(LC_ALL, "el_GR.UTF-8");
     initscr();
-    noecho(); // Απενεργοποίηση εμφάνισης συμβολοσειράς
-    cbreak(); // Απενεργοποίηση line buffering
-    curs_set(0); // Απενεργοποίηση κίνησης κατά την εισαγωγή χαρακτήρα
-    intrflush(stdscr, FALSE); // Απενεργοποίηση κίνησης κατά την εισαγωγή πλήκτρου
-    keypad(stdscr, TRUE); // Ενεργοποίηση πλήκτρων που είναι συνδεδεμένα στο πληκτρολόγιο
+    noecho();
+    cbreak();
+    curs_set(0);
+    intrflush(stdscr, FALSE);
+    keypad(stdscr, TRUE);
 }
-
-// clear && g++ -std=c++11 -Wall -Wextra main.cpp game.cpp player.cpp -o game -lncursesw && ./game level.txt
-// clear && make clean && make && ./game level.txt

@@ -18,7 +18,8 @@ void MpampisP2::getGemLocation(std::pair <int, int> gemLocation_) {
     this->gemLocation.Y = gemLocation_.Y;
 }
 
-//TODO ελεγχος ορθότητας
+//? Γνωρίζω πως ο Μπάμπης δεν είναι αρκετά 'έξυπνος' με τις κινήσεις του και κολλάει σε τύχους γιατι χρειάζεται ένα else statement με...πολλά if μέσα; Για όλες τις κινήσεις του.
+//? Δεν κατάφερα να υλοποιήσω κάτι τέτοιο και υπήρξαν πολλά bug οπότε το άφησα έτσι.
 bool MpampisP2::action() {
 
     //? Αποθηκευέι τους γειτονικούς χαρακτήρες από τις 4 κατευθύνσεις για τον ίδιο λόγο με τον Λούκα 'το Χ έχει χρώμα'  
@@ -36,7 +37,7 @@ bool MpampisP2::action() {
     move(currentPosition.X, currentPosition.Y + 1); //* και Δεξιά 
     characterRight = inch();
 
-    //? Επεξεργάσια στο που επιτρέπεται να κινηθεί
+    //? Επεξεργάζεται το που επιτρέπεται να κινηθεί
     bool canMoveUp = (characterAbove == '.' || characterAbove == 'X' || characterAbove != '*');
     bool canMoveDown = (characterBelow == '.' || characterBelow == 'X' || characterBelow != '*');
     bool canMoveLeft = (characterLeft == '.' || characterLeft == 'X' || characterLeft != '*');
@@ -55,7 +56,7 @@ bool MpampisP2::action() {
             gemLocation.Y = currentPosition.Y;
             return true;
         } else if (characterLeft != '*' || 'L') {
-            mvaddch(currentPosition.X, currentPosition.Y, '.');
+            mvaddch(currentPosition.X, currentPosition.Y, '.'); //* Ομοίως με τον Λουκά, εμφανί
             currentPosition.X++;
             showPlayer(this->colorID);
         }
@@ -99,7 +100,6 @@ bool MpampisP2::action() {
     }
     return false; 
 }
-
 
 void MpampisP2::endScreen() {
     setlocale(LC_ALL, "");

@@ -19,11 +19,8 @@ class Game {
 
         ~Game();
 
-
         // Μέθοδοι
-        void startScreen(std::string str);
-        
-
+        void startScreen(std::string studentInfo, std::string gameStory);
         void initializeMap();
         void initializeGame();
         void initializePlayers();

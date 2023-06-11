@@ -35,27 +35,29 @@ Game::Game(std::string filePath) : filePath(filePath) {
 Game::~Game() {
 
     if (!playerVector.empty()) {
-        delete playerVector[0];
-        delete playerVector[1];
-        delete playerVector[2];
+        delete playerVector[PLAYER_1];
+        delete playerVector[ENEMY];
+        delete playerVector[MAGIC_GEM];
     }
 }
 
 
 // Εμφανίζει ενα αλφαριθμητικό στην αρχή της οθόνης
-void Game::startScreen(std::string inputString) {    
+void Game::startScreen(std::string studentInfo, std::string gameStory) {    
     setlocale(LC_ALL, "");
 
     int row, column = 0;
     getmaxyx(stdscr, row, column);  //* Βρίσκει την τελευτάια γραμμή και στήλη 
-    mvprintw(0, 0, "%s", inputString.c_str());
+    mvprintw(0, 0, "%s", studentInfo.c_str());
+    mvprintw(2, 0, "%s", "Η πλοκή...");
+    mvprintw(4, 0, "%s", gameStory.c_str());
     mvprintw(row - 1 , 0, "[Για την έναρξη του παιχνιδιού, εισάγετε οποιοδήποτε χαρακτήρα]");
 
     refresh();
     getch();
 }
 
-
+//? Διάβασμα του χάρτη από το αρχείο ανά χαρακτήρα-χαρακτήρα
 void Game::initializeMap() {
 
     try {
@@ -83,14 +85,6 @@ void Game::initializeMap() {
     }
 }
 
-
-void Game::initializeGame() {
-
-    initializeMap();
-    initializePlayers();
-}
-
-
 void Game::initializePlayers() { 
     for (Player* player : playerVector){
         player->initializePlayerPositions(this->maxRow, this-> maxColumn);
@@ -100,12 +94,21 @@ void Game::initializePlayers() {
     playerVector[ENEMY]->getGemLocation(gemLocation);
 }
 
+void Game::initializeGame() {
+
+    initializeMap();
+    initializePlayers();
+    beginRound();
+}
+
+
+
 void Game::beginRound() {
 
-    bool flag = true;
     mvprintw(maxRow + 3, 0, "Xειρισμός του Λουκά Μαλφόι:\n[ARROW_KEYS-> Μετακίνιση SPACE-> Στασημότητα, ESC-> Έξοδος Παιχνιδιού]");
     refresh();
 
+    bool flag = true;
     while (flag) {
         
         refresh();
@@ -119,11 +122,13 @@ void Game::beginRound() {
         }
 
         refresh();
-        // mvaddch(playerVector[MAGIC_GEM]->getCurrentPosition().X, playerVector[MAGIC_GEM]->getCurrentPosition().Y, '.');
-        // playerVector[MAGIC_GEM]->initializePlayerPositions(this->maxRow, this-> maxColumn); 
-        // playerVector[MAGIC_GEM]->showGem(MAGIC_GEM);
-        // refresh();
-    
 
-    }}
-// std::cout << this->maxRow << "\n"<< this->maxColumn << std::endl;
+    }
+}
+// mvaddch(playerVector[MAGIC_GEM]->getCurrentPosition().X, playerVector[MAGIC_GEM]->getCurrentPosition().Y, '.');
+// playerVector[MAGIC_GEM]->initializePlayerPositions(this->maxRow, this-> maxColumn); 
+// playerVector[MAGIC_GEM]->showGem(MAGIC_GEM);
+// refresh();
+
+//? Η παραπάνω υλοποίηση λειτουγεί ωστόσο, παρουσίαζε πρόβλημα με τα χρώματα του Μπάμπη οπότε δεν κατάφερα να την τελειώσω.
+//? Αυτό που είχα σκοπό να κάνω είναι με κάποιον τρόπο να υπάρχει μια τυχαία πιθανότητα αλλαγής θέσης του πετραδιού αλλά δεν το κατάφερα 
