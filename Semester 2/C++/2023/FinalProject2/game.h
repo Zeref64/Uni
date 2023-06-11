@@ -22,7 +22,7 @@ class Game {
 
         // Μέθοδοι
         void startScreen(std::string str);
-        void endScreen(std::string str);
+        
 
         void initializeMap();
         void initializeGame();

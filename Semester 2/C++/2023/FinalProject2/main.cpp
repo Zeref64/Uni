@@ -15,14 +15,13 @@ int main(int argc, char** argv) {
     Game gameObject(argv[1]);
     gameObject.startScreen(studentInfo);
     clear();
-    gameObject.initializeGame();
 
+    gameObject.initializeGame();
     refresh();
-    getch();
+    // gameObject.beginRound();
+    // refresh();
 
     clear();
-    gameObject.endScreen("haha");
-    refresh();
 
     endwin(); 
 

@@ -3,7 +3,7 @@ CFLAGS = -std=c++11 -Wall
 LDFLAGS = -lncursesw
 
 # List of source files
-SRCS = game.cpp player.cpp main.cpp LoukasP1.cpp
+SRCS = game.cpp player.cpp main.cpp LoukasP1.cpp MpampisP2.cpp MagicGem.cpp
 
 # Generate corresponding object file names
 OBJS = $(SRCS:.cpp=.o)

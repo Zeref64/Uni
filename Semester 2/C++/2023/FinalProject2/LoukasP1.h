@@ -4,12 +4,17 @@
 
 class LoukasP1 : public Player {
 
+    private:
+        std::pair <int, int> gemLocation;
+
     public:
         LoukasP1();
 
-        ~LoukasP1();
+        virtual ~LoukasP1();
 
-        bool action();
+        bool action() override;
+        void endScreen() override;
+        void getGemLocation( std::pair<int, int> gemLocation_) override;
 };
 
 #endif

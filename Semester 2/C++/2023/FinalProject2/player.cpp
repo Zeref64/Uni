@@ -1,19 +1,26 @@
+#include <iostream>
 #include <ncurses.h>
 #include <random>
 #include <ctime>
 #include "player.h"
 
+#define X first
+#define Y second
+
 Player::Player() {}
-Player::Player(char symbol, int fgColor, int bgColor) : identifier(symbol), foregroundColor(fgColor), backgroundColor(bgColor) {}
+Player::Player(char symbol, int fgColor, int bgColor, int color_id) : 
+identifier(symbol), foregroundColor(fgColor), backgroundColor(bgColor), colorID(color_id) {}
 
 Player::~Player() {}
 
-char Player::getIdentifier() {return this->identifier;}
-std::pair<int, int> Player::getCurrentPosition() {return this->currentPosition;}
+char Player::getIdentifier() const {return this->identifier;}
+int Player::getColorID() const {return this->colorID;}
+std::pair<int, int> Player::getCurrentPosition() const {return this->currentPosition;}
 
 
+
+//*  Εμφανίζει τον παίχτη με το σωστό χρώμα
 void Player::showPlayer(int colorID) {
-
 
     start_color();
     use_default_colors(); 
@@ -21,7 +28,7 @@ void Player::showPlayer(int colorID) {
     init_pair(colorID, this->foregroundColor, this->backgroundColor);
 
     attron(COLOR_PAIR(colorID));
-    mvaddch(this->currentPosition.first, this->currentPosition.second, this->identifier);
+    mvaddch(this->currentPosition.X, this->currentPosition.Y, this->identifier);
     attroff(COLOR_PAIR(colorID));
     
 } 
@@ -46,5 +53,5 @@ void Player::initializePlayerPositions(int rowLimit, int columnLimit) {
         }
         attempts++;
     }
-
 }
+
