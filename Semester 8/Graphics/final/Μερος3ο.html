@@ -1,0 +1,766 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="webgl-debug.js"></script> 
+<script src="gl-matrix-min.js"></script> 
+
+<script id="vShader" type="x-shader/x-vertex">
+attribute vec4 aVertexPosition; 
+//attribute vec4 aVertexColor; 
+
+attribute vec2  aTextureCoordinates;
+
+uniform mat4 uVerticesTransform; 
+uniform mat4 uPerspectiveViewTransform; 
+
+varying vec2 vTextureCoordinates;
+void main() {
+	gl_Position = uPerspectiveViewTransform * uVerticesTransform * aVertexPosition; 
+	vTextureCoordinates = aTextureCoordinates;  
+} 
+</script>
+
+<script id="fShader" type="x-shader/x-fragment">
+precision mediump float; 
+//varying vec4 vColor; 
+varying vec2 vTextureCoordinates;
+
+uniform sampler2D uSampler; 
+
+void main() {
+	//gl_FragColor = vColor; 
+	gl_FragColor = texture2D(uSampler, vTextureCoordinates);
+}
+</script>
+
+<script>
+var gl; 
+var canvas; 
+var shadersProgram; 
+3
+var vertexPositionAttributePointer; 
+
+var verticesTransformUniformPointer; 
+var perspectiveViewUniformPointer;
+
+
+var vertexBuffer;
+
+var indexBuffer; 
+
+var perspectiveMatrix = new Float32Array(16);
+var viewMatrix = new Float32Array(16);
+var pvMatrix = new Float32Array(16);
+
+var movematrix = new Float32Array(16);
+var scalematrix = new Float32Array(16);
+var finalscale = new Float32Array(16);
+
+var totalAngle = -1.0;
+var totalZ = 2;
+
+var textureCoordinatesAttributePointer;
+var uSamplerPointer;	
+var textureBufferFloor;	 
+var textureBufferCube;
+var textureBufferHead;
+var cubeTexture1;  
+var cubeTextureHead;
+var floorTexture;
+var skyTexture;
+
+//
+var floorVertexBuffer;
+
+var floorIndexBuffer;
+// 
+var requestID = 0; 
+
+
+var numberOfFrames;
+var previousTime;
+var currentTime;
+ 
+var mouseDown = false; 
+var mouseHelper = false; 
+var deltaFresh = false; 
+
+var lastMouseX = null; 
+var lastMouseY = null; 
+var currMouseX = null; 
+var currMouseY = null;
+var deltaMouseX = 0; 
+var deltaMouseY = 0;
+var wheelRadiusFactor = 1; 
+var rect; 	
+
+
+function createGLContext(inCanvas) {
+	var outContext = null;
+	outContext = inCanvas.getContext("webgl");
+	if (!outContext)
+		outContext = inCanvas.getContext("experimental-webgl"); 
+	if (!outContext) 
+		alert("WebGL rendering context creation error.");
+	return outContext;
+}
+
+function createCompileShader(shaderType, shaderSource) {
+	var outShader = gl.createShader(shaderType);
+	gl.shaderSource(outShader, shaderSource); 
+	gl.compileShader(outShader); 
+	if (!gl.getShaderParameter(outShader, gl.COMPILE_STATUS)) { 
+		alert( "Shader compilation error. " + gl.getShaderInfoLog(outShader) ); 
+		gl.deleteShader(outShader);
+		outShader = null;
+	}
+	return outShader;
+}
+
+function initShaders() {
+	var vertexShaderSource = document.getElementById("vShader").textContent; 
+	var fragmentShaderSource = document.getElementById("fShader").textContent; 
+	var vertexShader = createCompileShader(gl.VERTEX_SHADER, vertexShaderSource); 
+	var fragmentShader = createCompileShader(gl.FRAGMENT_SHADER, fragmentShaderSource); 
+	shadersProgram = gl.createProgram(); 
+	gl.attachShader(shadersProgram, vertexShader); 
+	gl.attachShader(shadersProgram, fragmentShader); 
+	gl.linkProgram(shadersProgram); 
+	if (!gl.getProgramParameter(shadersProgram, gl.LINK_STATUS)) { 
+		alert("Shaders linking error.");
+	}
+	gl.useProgram(shadersProgram); 
+	vertexPositionAttributePointer = gl.getAttribLocation(shadersProgram, "aVertexPosition"); 
+	gl.enableVertexAttribArray(vertexPositionAttributePointer); 
+	
+	 
+	textureCoordinatesAttributePointer = gl.getAttribLocation(shadersProgram, "aTextureCoordinates");
+	gl.enableVertexAttribArray(textureCoordinatesAttributePointer);
+
+	verticesTransformUniformPointer = gl.getUniformLocation(shadersProgram, "uVerticesTransform"); 
+	perspectiveViewUniformPointer = gl.getUniformLocation(shadersProgram, "uPerspectiveViewTransform");
+	
+	uSamplerPointer = gl.getUniformLocation(shadersProgram, "uSampler");
+}
+
+function initBuffers() {
+	
+	//! Όπου υπάρχει comment που ξεκινάει με '//!' τότε πρόκειται για δυσκολία που αντιμετωπίσαμε
+
+
+	//* Άλλαξα τα Z σε όλα ώστε τώρα να είναι από -1 εως 1 (ακμή 2) βάση εκφώνησης
+	var cubeVertices = new Float32Array([
+		//ΠΡΩΤΗ ΟΨΗ
+		-1.0,  1.0, -1.0 , 1.0, // Κορυφή Α 0 	
+		-1.0, -1.0, -1.0 , 1.0, // Κορυφή Β 1	
+		 1.0, -1.0, -1.0 , 1.0, // Κορυφή Γ 2	
+		 1.0,  1.0, -1.0 , 1.0,	//Κορυφη Δ 3
+		//ΔΕΥΤΕΡΗ ΟΨΗ
+		-1.0, -1.0, -1.0 , 1.0, // Κορυφή Ε 4	
+		 1.0, -1.0, -1.0 , 1.0, // Κορυφή Ζ 5
+		-1.0, -1.0, 1.0 , 1.0, // Κορυφή Η 6
+		 1.0, -1.0, 1.0 , 1.0, // Κορυφή Θ 7
+		//ΤΡΙΤΗ ΟΨΗ 
+		-1.0,  1.0, -1.0 , 1.0, // Κορυφή Ι 8
+		 1.0,  1.0, -1.0 , 1.0,	//Κορυφη Κ 9
+		-1.0,  1.0, 1.0 , 1.0, // Κορυφή Λ 10
+		 1.0,  1.0, 1.0 , 1.0, // Κορυφή Μ 11
+		//ΤΕΤΑΡΤΗ ΟΨΗ
+		-1.0,  1.0, 1.0 , 1.0, // Κορυφή Ν 12
+		 1.0,  1.0, 1.0 , 1.0, // Κορυφή Ξ 13
+		-1.0, -1.0, 1.0 , 1.0, // Κορυφή Ο 14
+		 1.0, -1.0, 1.0 , 1.0, // Κορυφή Π 15
+		//ΠΕΜΠΤΗ ΟΨΗ 
+		-1.0,  1.0, 1.0 , 1.0, // Κορυφή Ρ 16
+		-1.0,  1.0, -1.0 , 1.0, // Κορυφή Σ 17
+		-1.0, -1.0, 1.0 , 1.0, // Κορυφή Τ 18
+		-1.0, -1.0, -1.0 , 1.0, // Κορυφή Υ 19
+		//ΕΚΤΗ ΟΨΗ 
+		1.0,  1.0, -1.0 , 1.0, // Κορυφή Χ 20
+		1.0,  1.0, 1.0 , 1.0, // Κορυφή Ψ 21
+		1.0, -1.0, -1.0 , 1.0, // Κορυφή Ω 22
+		1.0, -1.0, 1.0 , 1.0, // Κορυφή S 23
+	]);
+	vertexBuffer = gl.createBuffer(); 
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer); 
+	gl.bufferData(gl.ARRAY_BUFFER, cubeVertices,	gl.STATIC_DRAW); 
+	vertexBuffer.itemSize = 4;  
+	vertexBuffer.itemCount = 24;
+
+
+	//πίνακας με αναφορές στις παραπάνω κορυφές (indices)
+	var indexMatrix = new Uint16Array([
+				//ΠΡΩΤΗ ΟΨΗ
+				0,1,2,  	// ΑΒΓ
+				2,0,3,		//ΓΑΔ
+				//ΔΕΥΤΕΡΗ ΟΨΗ
+				6,4,7, 		//ΗΕΘ
+				5,4,7,  	//ΖΕΘ 
+				//ΤΡΙΤΗ ΟΨΗ 
+				8,10,9,		//ΙΛΚ
+				11,10,9, 	//ΜΛΚ
+				//ΤΕΤΑΡΤΗ ΟΨΗ
+				15,14,13,	//ΠΟΞ
+				12,14,13,	//ΝΟΞ
+				//ΠΕΜΠΤΗ ΟΨΗ
+				18,16,19,	//ΤΡΥ
+				17,16,19,	//ΣΡΥ
+				//ΕΚΤΗ ΟΨΗ
+				22,20,23,	//ΩΧS
+				21,20,23	//ΨΧS
+				]);
+	indexBuffer = gl.createBuffer(); 
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer); 
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexMatrix,gl.STATIC_DRAW);
+	indexBuffer.itemCount = 36; 
+
+	//
+	var floorTetraVertices = new Float32Array([
+		-30.0,  30.0, 0.0, 1.0,  // Κορυφή Α
+		 30.0,  30.0, 0.0, 1.0, // Κορυφή Β
+		 30.0, -30.0, 0.0, 1.0, // Κορυφή Γ
+	    -30.0, -30.0, 0.0, 1.0   // Κορυφή Δ
+	]);
+	floorVertexBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, floorVertexBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, floorTetraVertices, gl.STATIC_DRAW);
+	floorVertexBuffer.itemSize = 4;
+	floorVertexBuffer.itemCount = 4;
+	
+	var floorIndexMatrix = new Uint16Array([
+		0, 1, 2,  // Α Β Γ
+		0, 3, 2,  // Α Δ Γ
+	]);
+	floorIndexBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorIndexBuffer);
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, floorIndexMatrix, gl.STATIC_DRAW);
+	floorIndexBuffer.itemCount = 6;
+
+	//Head cube texture 
+	textureBufferHead = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferHead);
+	var textureCoordinates=[
+							0.0,0.0,
+							0.5,0.0,
+							0.5,0.5,
+							0.0,0.5,
+
+							0.0,0.0,
+							0.5,0.0,
+							0.5,0.5,
+							0.0,0.5,
+
+							0.0,0.0,
+							0.5,0.0,
+							0.5,0.5,
+							0.0,0.5,
+
+							0.0,0.0,
+							0.5,0.0,
+							0.5,0.5,
+							0.0,0.5,
+
+							0.0,0.0,
+							0.5,0.0,
+							0.5,0.5,
+							0.0,0.5,
+
+							0.0,0.0,
+							0.5,0.0,
+							0.5,0.5,
+							0.0,0.5
+						];
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),gl.STATIC_DRAW);  
+	textureBufferHead.itemSize = 2;
+
+	cubeTextureHead = gl.createTexture();
+	var cube2ImageURL = "nose2.jpg";
+	preprocessTextureImage(cube2ImageURL, cubeTextureHead);
+
+	//Other cubes texture
+	textureBufferCube = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferCube);
+	var textureCoordinates=[
+		// Front face
+		0.0, 0.0,
+		1.0, 0.0,
+		1.0, 1.0,
+		0.0, 1.0,
+
+		// Back face
+		1.0, 0.0,
+		1.0, 1.0,
+		0.0, 1.0,
+		0.0, 0.0,
+
+		// Top face
+		0.0, 1.0,
+		0.0, 0.0,
+		1.0, 0.0,
+		1.0, 1.0,
+
+		// Bottom face
+		1.0, 1.0,
+		0.0, 1.0,
+		0.0, 0.0,
+		1.0, 0.0,
+
+		// Left face
+		1.0, 0.0,
+		1.0, 1.0,
+		0.0, 1.0,
+		0.0, 0.0,
+
+		// Right face
+		0.0, 0.0,
+		1.0, 0.0,
+		1.0, 1.0,
+		0.0, 1.0
+	];
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),gl.STATIC_DRAW);  
+	textureBufferCube.itemSize = 2;
+
+	cubeTexture1 = gl.createTexture();
+	var cube1ImageURL = "dots.jpg";
+	preprocessTextureImage(cube1ImageURL, cubeTexture1);
+
+	//Floor texture
+	textureBufferFloor = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferFloor);
+	var textureCoordinates=[0.0, 0.0,
+							0.0, 1.0,
+							1.0, 1.0,
+							1.0, 0.0];
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates),gl.STATIC_DRAW);  
+	textureBufferFloor.itemSize = 2;
+	
+	floorTexture = gl.createTexture();
+	var floorImageURL = "stone.jpg";
+	preprocessTextureImage(floorImageURL, floorTexture);
+
+	//Sky texture 
+	//χρηση του textureBufferCube αφου γινεται σχεδιαση κυβου 
+	skyTexture = gl.createTexture();
+	var skyImageURL = "sky.jpg";
+	preprocessTextureImage(skyImageURL, skyTexture);
+}
+
+
+function preprocessTextureImage(imageURL, textureObject) {
+
+	var imageObject = new Image();
+
+	imageObject.onload = function() {    
+		
+		gl.bindTexture(gl.TEXTURE_2D, textureObject);
+				
+		gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+		
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, imageObject);
+		
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+		
+		gl.generateMipmap(gl.TEXTURE_2D);
+	};
+
+	imageObject.src = imageURL;	
+}
+
+function drawScene() { 
+
+
+	var viewAngleTxt=document.getElementById("viewAngleTxt").value;
+	var numViewAngle = parseFloat(viewAngleTxt);
+	numViewAngle = numViewAngle*Math.PI/180.0; 
+	
+	var viewDistanceTxt=document.getElementById("viewDistanceTxt").value;
+	var numViewDistance = parseFloat(viewDistanceTxt);
+	
+	glMatrix.mat4.identity(pvMatrix);
+	
+	if (requestID && !mouseDown){
+
+		var txtStepAngle;
+		txtStepAngle = document.getElementById("stepAngleTxt").value;
+		var numStepAngle = parseFloat(txtStepAngle);
+		numStepAngle = numStepAngle * Math.PI / 180.0;
+		totalAngle += numStepAngle;
+
+		if (totalAngle >= 2*Math.PI)
+			totalAngle = totalAngle - 2*Math.PI; 
+		else if (totalAngle < 0) 
+			totalAngle = totalAngle + 2*Math.PI; 
+
+		var txtStepHeight;
+		txtStepHeight = document.getElementById("stepHeightTxt").value;
+		var numStepHeight = parseFloat(txtStepHeight);
+		totalZ += numStepHeight;
+	}// Τέλος TODO.1.
+	else if (mouseDown && deltaFresh==true) {
+		
+
+		var mouseStepangle = deltaMouseX*Math.PI/180.0; 
+		totalAngle += mouseStepangle;
+
+		if (totalAngle >= 2*Math.PI) 
+			totalAngle = totalAngle - 2*Math.PI; 
+		else if (totalAngle < 0) 
+			totalAngle = totalAngle + 2*Math.PI; 
+
+
+		totalZ += deltaMouseY/10;
+		deltaFresh = false;
+
+	}
+
+	if (wheelRadiusFactor > 1000){
+		wheelRadiusFactor = 1000;
+	}
+	else if (wheelRadiusFactor < 0.001){
+		wheelRadiusFactor = 0.001;
+	}
+
+
+	if (document.getElementById('Left_Front_Top').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [-numViewDistance, numViewDistance, numViewDistance], [0, 0, 0], [0, 0, 1]);  //!  δυσκολια  στην κατανοηση της ορθοφωνιας αποστασης καμερας ΑΠΟΡΙΑ
+	}
+	else if (document.getElementById('Left_Front_Bottom').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [-numViewDistance, numViewDistance, -numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Left_Back_Top').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [-numViewDistance, -numViewDistance, numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Left_Back_Bottom').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [-numViewDistance, -numViewDistance, -numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Right_Front_Top').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [numViewDistance, numViewDistance, numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Right_Front_Bottom').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [numViewDistance, numViewDistance, -numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Right_Back_Top').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [numViewDistance, -numViewDistance, numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Right_Back_Bottom').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [numViewDistance, -numViewDistance, -numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+	else if (document.getElementById('Animation').checked) {
+		glMatrix.mat4.lookAt(viewMatrix, [(30 * Math.cos(totalAngle)), (30 * Math.sin(totalAngle)), totalZ], [0, 0, 0], [0, 0, 1]);
+	}
+	else {
+		glMatrix.mat4.lookAt(viewMatrix, [numViewDistance, numViewDistance, numViewDistance], [0, 0, 0], [0, 0, 1]);
+	}
+
+	//set εντολών κάμερας
+	glMatrix.mat4.perspective(perspectiveMatrix, numViewAngle, 1, 0.001, 20000); 
+	glMatrix.mat4.multiply(pvMatrix, perspectiveMatrix, viewMatrix);
+	gl.uniformMatrix4fv(perspectiveViewUniformPointer, false, pvMatrix); 	//! ηταν πανω απο το multiply και δεν επαιζε η καμερα 
+	
+	
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer); 
+	gl.vertexAttribPointer(vertexPositionAttributePointer, vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+
+	gl.activeTexture(gl.TEXTURE0);
+	gl.bindTexture(gl.TEXTURE_2D, cubeTexture1); 
+	gl.uniform1i(uSamplerPointer, 0);	
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferCube);
+	gl.vertexAttribPointer(textureCoordinatesAttributePointer, textureBufferCube.itemSize, gl.FLOAT, false, 0, 0);
+
+
+	// *Σημείωση* Απο την πίσω αριστερά κορυφή της πίσω πατούσας έως την μπροστά δεξιά κορυφή της μπροστά δεξιά
+	//* είναι από -6 εως 6 = 12 Χ(πλάτος)
+	//* από -8 εως 8 = 16 Y(Μήκος)
+	//* από 0 εως 0 = 0 Ζ(Υψος) (γιατί η ακμή είναι ήδη 2 που είναι το ύψος)
+	//* Η αφαίρεση είναι το πού βρίσκομαι στο που θέλω να παω δλδ
+	//* προορισμός - αρχική θέση αρα θελω να παω στο [-6 -8 0] από το [-1.5, -2.5, -1] ή [-3/2, -5/2, -2/2] για το [Back Left]
+	//* θα πρέπει να του 'αφαιρέσω' την τρέχουσα θέση δλδ 
+	//* -4.5 στο -1.5 για να γίνει -6 -> μετακινώ το Χ (πλατος) κατά -3
+	//* -5.5 στο -2.5 για να γίνει -8 -> μετακινώ το Υ (μήκος) κατά -3
+	//* +1 στο -1 για να γίνει 0 -> μετακινώ το Ζ (ύψος) κατά +1
+	//* αποτέλεσμα: [ ((-4.5) - (-1.5)), ((-5.5) - (-2.5)), (1 + (-1)) ] = [-6, -8, 0] 
+	//* Οπότε:
+
+	//* *ΠΡΟΣΟΧΗ* η πίσω αριστερά κορυφή είναι (-1,-1,-1) -  [Back Left]
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 2.5, 1]); 	// (-3/2, -5/2, -2/2) 
+	glMatrix.mat4.fromTranslation(movematrix, [-4.5, -5.5, 1]);  //* [Δεξιά +/Αριστερα-, Μπροστά +/Πίσω -, Πάνω/Κάτω]
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix ); //* Αλλαγή στην σειρά, όποιο from γίνει 1ο μπαίνει τελευταίο στο γινόμενο
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+	
+	// //Εφόσον η [Back Left] είναι [-6, -8, 0] τότε η [Back Right] θα είναι: [0, -8, 0]
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 2.5, 1]); // πλατος, μηκος, υψος 
+	glMatrix.mat4.fromTranslation(movematrix, [-4.5, 5.5, 1]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	//* ΠΡΟΣΟΧΗ η μπροστά δεξιά κορυφή είναι (1,1,-1)	-  [Front Right] 
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 2.5, 1]);
+	glMatrix.mat4.fromTranslation(movematrix, [4.5, 5.5, 1]);   //* [Δεξιά +/Αριστερα -, Μπροστά +/Πίσω -, Πάνω +/Κάτω -]
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix );
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	// [Front Left] η μπροστa αριστερη γωνια είναι (1, -1, -1): (6, -8, 0) - (1.5, -2.5, -1) 
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 2.5, 1]); 
+	glMatrix.mat4.fromTranslation(movematrix, [4.5, -5.5, 1]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+	
+	//[Back Left Leg] -> (-6, -8, 2) - (-1.5, -1.5, -3)  //! γιατι φαινεται σωστο το υψος οταν αφαιρερω απο το -1 το -6
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 1.5, 3]); 
+	glMatrix.mat4.fromTranslation(movematrix, [-4.5, -6.5, 5]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	//[Back Right Leg] -> (6, -8, 2) - (-1.5, -1.5, -3) 
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 1.5, 3]); 
+	glMatrix.mat4.fromTranslation(movematrix, [4.5, -6.5, 5]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	//[Front Right Leg] -> (6, 8-2, 2) - (1.5, 1.5, -3) 
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 1.5, 3]); 
+	glMatrix.mat4.fromTranslation(movematrix, [4.5, 4.5, 5]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	//[Front Left Leg] -> (-6, 8-2, 2) - (-1.5, 1.5, -3) 
+	glMatrix.mat4.fromScaling(scalematrix, [1.5, 1.5, 3]); 
+	glMatrix.mat4.fromTranslation(movematrix, [-4.5, 4.5, 5]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+    
+	//[tail] -> (-1, -8, 10) - (-1, -1, -2.5) 
+	glMatrix.mat4.fromScaling(scalematrix, [1, 1, 2.5]); 
+	glMatrix.mat4.fromTranslation(movematrix, [0, -7, 12.5]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+    
+    //[right ear] -> (3, 8-2-4, 12) - (-1, -1, -2.5) 
+    glMatrix.mat4.fromScaling(scalematrix, [1, 1, 2.5]); 
+    glMatrix.mat4.fromTranslation(movematrix, [4, 3, 14.5]); 
+    glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+    gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+    gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+    //[left ear] -> (-5, 8-2-4, 12) - (-1, -1, -2.5) 
+    glMatrix.mat4.fromScaling(scalematrix, [1, 1, 2.5]); 
+    glMatrix.mat4.fromTranslation(movematrix, [-4, 3, 14.5]); 
+    glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+    gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+    gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+    
+	//[body] -> (-3, -8, 5) - (-3, -7, -2.5) 
+	glMatrix.mat4.fromScaling(scalematrix, [3, 7, 2.5]); 
+	glMatrix.mat4.fromTranslation(movematrix, [0, -1, 7.5]);  
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	//[neck] -> (-2, 8-2-4, 10) - (-2, -2, -1.5) 
+	glMatrix.mat4.fromScaling(scalematrix, [2, 2, 1.5]); 
+	glMatrix.mat4.fromTranslation(movematrix, [0, 4, 11.5]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+	
+	//Head Texture
+	gl.activeTexture(gl.TEXTURE1);
+	gl.bindTexture(gl.TEXTURE_2D, cubeTextureHead); 
+	gl.uniform1i(uSamplerPointer, 1);	
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferHead);
+	gl.vertexAttribPointer(textureCoordinatesAttributePointer, textureBufferHead.itemSize, gl.FLOAT, false, 0, 0);
+
+	//[head] -> (-3, 8-2-4, 13) - (-3, -4, -2) 
+	glMatrix.mat4.fromScaling(scalematrix, [3, 4, 2]); 
+	glMatrix.mat4.fromTranslation(movematrix, [0, 6, 15]); 
+	glMatrix.mat4.multiply (finalscale, movematrix, scalematrix);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, finalscale);
+	gl.drawElements(gl.TRIANGLES, indexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+
+
+
+	//Floor Settings 
+	
+	gl.bindBuffer(gl.ARRAY_BUFFER, floorVertexBuffer);
+	gl.vertexAttribPointer(vertexPositionAttributePointer, floorVertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, floorIndexBuffer);
+
+	gl.activeTexture(gl.TEXTURE2);
+	gl.bindTexture(gl.TEXTURE_2D, floorTexture); 
+	gl.uniform1i(uSamplerPointer, 2);
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferFloor);
+	gl.vertexAttribPointer(textureCoordinatesAttributePointer, textureBufferFloor.itemSize, gl.FLOAT, false, 0, 0);
+
+	glMatrix.mat4.fromTranslation(pvMatrix, [0, 0, 0]);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, pvMatrix);
+	gl.drawElements(gl.TRIANGLES, floorIndexBuffer.itemCount, gl.UNSIGNED_SHORT, 0);
+	
+	//Sky texture
+	gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer); 
+	gl.vertexAttribPointer(vertexPositionAttributePointer, vertexBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer)
+	
+	gl.activeTexture(gl.TEXTURE3);
+	
+	gl.bindTexture(gl.TEXTURE_2D, skyTexture); 
+	
+	gl.uniform1i(uSamplerPointer, 3);
+		
+	gl.bindBuffer(gl.ARRAY_BUFFER, textureBufferCube);
+	
+	gl.vertexAttribPointer(textureCoordinatesAttributePointer, textureBufferCube.itemSize, gl.FLOAT, false, 0, 0);
+
+	//2η ομάδα 
+	var scaleMatrix = new Float32Array(16);
+	glMatrix.mat4.fromScaling(scaleMatrix, [200,200,200]);
+	gl.uniformMatrix4fv(verticesTransformUniformPointer, false, scaleMatrix); 
+	gl.drawElements(gl.TRIANGLES,indexBuffer.itemCount,gl.UNSIGNED_SHORT, 0);
+}
+
+function main() {
+	minDimension = Math.min(window.innerHeight, window.innerWidth);
+	canvas = document.getElementById("sceneCanvas"); 
+	canvas.width = 0.9*minDimension; 
+	canvas.height = 0.9*minDimension; 
+	gl = WebGLDebugUtils.makeDebugContext(createGLContext(canvas));
+	initShaders(); 
+	initBuffers(); 
+	gl.clearColor(0.5, 0.5, 0.5, 1.0); 
+	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+	gl.enable(gl.DEPTH_TEST); 
+
+	previousTime = Date.now();
+	numberOfFrames = 0;
+	
+	canvas.onmousedown = handleMouseDown;
+    window.onmouseup = handleMouseUp;
+	canvas.onmousemove = handleMouseMove;
+	canvas.onwheel = handleMouseWheel;
+	
+	rect = canvas.getBoundingClientRect();
+
+}
+
+function startAnimation() {	
+	if (requestID == 0)
+		requestID = window.requestAnimationFrame(animationStep);
+}
+function animationStep() {
+	drawScene();
+	requestID = window.requestAnimationFrame(animationStep);
+}
+function stopAnimation() {
+	totalAngle = -1.0;
+	totalZ = 2;
+	window.cancelAnimationFrame(requestID);
+	requestID = 0;
+}
+
+function handleMouseDown(event) {
+		mouseDown = true;
+		mouseHelper = true;
+		lastMouseX = event.clientX - rect.left;
+		lastMouseY = rect.bottom - event.clientY;
+		deltaMouseX = 0;
+		deltaMouseY = 0;
+		deltaFresh = true;
+}
+
+
+function handleMouseUp(event) {
+    mouseDown = false;
+	if (mouseHelper){ 		
+		stopAnimation();	
+		mouseHelper = false;
+	}
+}
+
+function handleMouseMove(event) {
+		currMouseX = event.clientX - rect.left;
+		currMouseY = rect.bottom - event.clientY;
+		document.getElementById("mouseX").innerHTML = currMouseX;
+		document.getElementById("mouseY").innerHTML = currMouseY;
+
+		if (mouseDown)
+		{
+			deltaMouseX = currMouseX - lastMouseX;
+			deltaMouseY = currMouseY - lastMouseY;
+			deltaFresh = true;
+		}
+
+
+		if (!requestID && mouseDown){
+			animationStep();
+		}
+		else if (!mouseDown && mouseHelper){
+			stopAnimation();
+		}
+		// Τέλος TODO.5.
+		lastMouseX = currMouseX;
+		lastMouseY = currMouseY;
+}
+
+
+function handleMouseWheel(event) {
+		
+		if (event.deltaY > 0){
+			wheelRadiusFactor = wheelRadiusFactor*1.01;
+		}
+		else
+			wheelRadiusFactor = wheelRadiusFactor*0.99;
+	
+}
+
+</script>
+
+</head>
+<body onload="main()">
+<canvas id="sceneCanvas">
+</canvas>
+<br>
+
+Frame Rate (Frames Per Second - FPS):<span id="fps">--</span><BR>
+
+Θέση ποντικιού στον καμβά x:<span id="mouseX">--</span>,y:<span id="mouseY">--</span>
+
+<br>
+<b>Ρυθμίσεις κάμερας:</b>
+<p>
+Γωνία θέασης:<input type="text" id="viewAngleTxt" value="90" autocomplete="off">
+Ορθογώνια απόσταση κάμερας:<input type="text" id="viewDistanceTxt" value="20" autocomplete="off">
+Βήμα γωνίας περιστροφής της κάμερας:<input type="text" id="stepAngleTxt" value="1" autocomplete="off">
+Βήμα ύψους της κάμερας:<input type="text" id="stepHeightTxt" value="0.01" autocomplete="off">
+<form>
+	<input type="radio" name="cam_pos" id="Left_Front_Top">Left-Front-Top 
+	<input type="radio" name="cam_pos" id="Left_Front_Bottom">Left-Front-Bottom
+	<input type="radio" name="cam_pos" id="Left_Back_Top">Left-Back-Top
+	<input type="radio" name="cam_pos" id="Left_Back_Bottom">Left-Back-Bottom 
+	<input type="radio" name="cam_pos" id="Right_Front_Top">Right-Front-Top
+	<input type="radio" name="cam_pos" id="Right_Front_Bottom">Right-Front-Bottom
+	<input type="radio" name="cam_pos" id="Right_Back_Top">Right-Back-Top
+	<input type="radio" name="cam_pos" id="Right_Back_Bottom">Right-Back-Bottom
+	<input type="radio" name="cam_pos" id="Animation">Animation
+</form>
+<br>
+<button id="drawSceneButton" onclick="drawScene()">Ξανασχεδίασε!</button>  
+<button id="startButton" onclick="startAnimation()">Ξεκίνα!</button>
+<button id="stopButton" onclick="stopAnimation()">Σταμάτα!</button>
+</body>
+</html>
