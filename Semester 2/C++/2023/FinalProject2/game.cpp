@@ -25,10 +25,6 @@ Game::Game(std::string filePath) : filePath(filePath) {
     playerVector.push_back( new LoukasP1() );
     playerVector.push_back( new MpampisP2() );
     playerVector.push_back( new MagicGem() );
-    
-    
-    // playerVector.push_back( new Player('D', COLOR_RED, -1) );
-    //TODO More players 
 
 }
 
@@ -43,14 +39,14 @@ Game::~Game() {
 
 
 // Εμφανίζει ενα αλφαριθμητικό στην αρχή της οθόνης
-void Game::startScreen(std::string studentInfo, std::string gameStory) {    
+void Game::startScreen(std::string studentInfo, std::string* gameStory) {    
     setlocale(LC_ALL, "");
 
     int row, column = 0;
     getmaxyx(stdscr, row, column);  //* Βρίσκει την τελευτάια γραμμή και στήλη 
     mvprintw(0, 0, "%s", studentInfo.c_str());
     mvprintw(2, 0, "%s", "Η πλοκή...");
-    mvprintw(4, 0, "%s", gameStory.c_str());
+    mvprintw(4, 0, "%s", gameStory->c_str());
     mvprintw(row - 1 , 0, "[Για την έναρξη του παιχνιδιού, εισάγετε οποιοδήποτε χαρακτήρα]");
 
     refresh();
@@ -102,10 +98,10 @@ void Game::initializeGame() {
 }
 
 
-
+//? H loop του παιχνιδιού τρέχει μέχρι κάποιος μάγος να βρεί το πετράδι, (επιστρέψει true)
 void Game::beginRound() {
 
-    mvprintw(maxRow + 3, 0, "Xειρισμός του Λουκά Μαλφόι:\n[ARROW_KEYS-> Μετακίνιση SPACE-> Στασημότητα, ESC-> Έξοδος Παιχνιδιού]");
+    mvprintw(maxRow + 3, 0, "Xειρισμός του Λουκά Μαλφόι:\n\n\tARROW_KEYS ->  Μετακίνιση προς μια κατεύθυνση,\n\tSPACE ->  Στασημότητα (πάσο),\n\tESC ->  Έξοδος Παιχνιδιού.");
     refresh();
 
     bool flag = true;
